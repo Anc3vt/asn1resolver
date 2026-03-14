@@ -1,6 +1,6 @@
 package com.ancevt.asn;
 
-import com.ancevt.asn.model.ModuleDefinition;
+import com.ancevt.asn.ast.ModuleDefinition;
 import com.ancevt.asn.parse.Parser;
 import com.ancevt.asn.parse.Tokenizer;
 import org.junit.jupiter.api.Test;

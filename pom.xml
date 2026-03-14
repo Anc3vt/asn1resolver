@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ancevt.asn</groupId>
-    <artifactId>asn</artifactId>
+    <artifactId>asnresolver</artifactId>
     <version>0.0.0.1-SNAPSHOT</version>
 
     <name>ASN.1 Resolver</name>

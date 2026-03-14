@@ -1,7 +1,15 @@
 package com.ancevt.asn.parse;
 
-import com.ancevt.asn.model.*;
-import com.ancevt.asn.model.type.*;
+import com.ancevt.asn.ast.*;
+import com.ancevt.asn.ast.classdef.ClassField;
+import com.ancevt.asn.ast.classdef.ClassType;
+import com.ancevt.asn.ast.object.ObjectInstance;
+import com.ancevt.asn.ast.object.ObjectSet;
+import com.ancevt.asn.ast.object.WithSyntaxRule;
+import com.ancevt.asn.ast.type.*;
+import com.ancevt.asn.ast.type.IoFieldRefType;
+import com.ancevt.asn.ast.type.IoSelection;
+import com.ancevt.asn.constraint.*;
 
 import java.util.ArrayList;
 import java.util.List;

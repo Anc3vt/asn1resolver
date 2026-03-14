@@ -1,7 +1,14 @@
 package com.ancevt.asn.resolve;
 
-import com.ancevt.asn.model.*;
-import com.ancevt.asn.model.type.*;
+import com.ancevt.asn.ast.AsnModel;
+import com.ancevt.asn.ast.type.Field;
+import com.ancevt.asn.ast.ModuleDefinition;
+import com.ancevt.asn.ast.classdef.ClassField;
+import com.ancevt.asn.ast.classdef.ClassType;
+import com.ancevt.asn.ast.object.ObjectInstance;
+import com.ancevt.asn.ast.object.ObjectSet;
+import com.ancevt.asn.ast.type.*;
+import com.ancevt.asn.ast.type.IoFieldRefType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,8 +66,6 @@ public final class AsnLinker {
 
         // TypeRef
         if (type instanceof TypeRef ref) {
-
-            // если уже резолвлен — не трогаем
             if (ref.getResolvedType() != null) {
                 return;
             }
@@ -70,7 +75,6 @@ public final class AsnLinker {
 
             ref.setResolvedType(resolved);
 
-            // важно: линкаем то, на что он ссылается
             linkTypeRecursive(module, resolved);
 
             return;
