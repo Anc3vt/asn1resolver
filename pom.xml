@@ -36,6 +36,12 @@
             <version>${junit-jupiter-api.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit-jupiter-api.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -74,7 +80,7 @@
         <profile>
             <id>assembly</id>
             <build>
-                <finalName>empty-project</finalName>
+                <finalName>asn1-resolver</finalName>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -84,7 +90,7 @@
                             <archive>
                                 <manifest>
                                     <addClasspath/>
-                                    <mainClass>com.ancevt.Application</mainClass>
+                                    <mainClass>com.ancevt.asn1.demo.DebugMain</mainClass>
                                 </manifest>
                             </archive>
                             <descriptorRefs>
