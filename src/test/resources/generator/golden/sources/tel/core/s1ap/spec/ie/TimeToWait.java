@@ -2,48 +2,36 @@
 // Review before adding to production sources.
 package tel.core.s1ap.spec.ie;
 
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import tel.core.s1ap.core.asn.AsnAper;
 import tel.core.s1ap.core.asn.BitInput;
 import tel.core.s1ap.core.asn.BitOutput;
-import tel.core.s1ap.core.error.S1apException;
 import tel.core.s1ap.core.model.InformationElement;
 
 public final class TimeToWait implements InformationElement {
     public enum Value {
-        V1S(0, false),
-        V2S(1, false),
-        V5S(2, false),
-        V10S(3, false),
-        V20S(4, false),
-        V60S(5, false);
+        V1S(0),
+        V2S(1),
+        V5S(2),
+        V10S(3),
+        V20S(4),
+        V60S(5),
+        UNKNOWN(-1);
 
-        private final int index;
-        private final boolean extensionAddition;
-        Value(int index, boolean extensionAddition) {
-            this.index = index;
-            this.extensionAddition = extensionAddition;
-        }
-        public int getCode() { return index; }
-        public boolean isExtensionAddition() { return extensionAddition; }
-        public static Value fromRootIndex(int index) {
-            if (index < 0) throw new S1apException("Negative root index");
-            return fromIndex(index);
-        }
-        public static Value fromExtensionIndex(int index) {
-            if (index < 0) throw new S1apException("Negative extension index");
-            return fromIndex(-index - 1);
-        }
-        private static Value fromIndex(int code) {
-            return switch (code) {
-                case 0 -> V1S;
-                case 1 -> V2S;
-                case 2 -> V5S;
-                case 3 -> V10S;
-                case 4 -> V20S;
-                case 5 -> V60S;
-                default -> throw new S1apException("Unknown ENUMERATED index: " + code);
-            };
+        private static final Map<Integer, Value> BY_CODE = Arrays.stream(values())
+                .collect(Collectors.toMap(Value::getCode, value -> value));
+
+        private final int code;
+
+        Value(int code) { this.code = code; }
+
+        public int getCode() { return code; }
+
+        static Value valueOf(int code) {
+            return BY_CODE.getOrDefault(code, UNKNOWN);
         }
     }
 
@@ -51,7 +39,9 @@ public final class TimeToWait implements InformationElement {
 
     public TimeToWait(BitInput in) {
         try {
-            this.value = Value.fromIndex(AsnAper.index(in, 6, true, true));
+            int index = AsnAper.index(in, 6, true, true);
+            long code = index < 0 ? 6L - index - 1 : index;
+            this.value = code <= Integer.MAX_VALUE ? Value.valueOf((int) code) : Value.UNKNOWN;
         } catch (RuntimeException e) {
             throw AsnAper.protocol(e);
         }
@@ -63,11 +53,12 @@ public final class TimeToWait implements InformationElement {
     }
 
     public Value getValue() { return value; }
-    public int getCode() { return value.index; }
+    public int getCode() { return value.code; }
 
     @Override
     public void encode(BitOutput out) {
-        AsnAper.index(out, value.index, value.extensionAddition, 6, true, true);
+        if (value == Value.UNKNOWN) throw new IllegalStateException("Cannot encode UNKNOWN ENUMERATED value");
+        AsnAper.index(out, value.code >= 6 ? value.code - 6 : value.code, value.code >= 6, 6, true, true);
     }
 
     @Override

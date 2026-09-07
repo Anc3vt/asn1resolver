@@ -2,48 +2,36 @@
 // Review before adding to production sources.
 package tel.core.s1ap.spec.ie;
 
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import tel.core.s1ap.core.asn.AsnAper;
 import tel.core.s1ap.core.asn.BitInput;
 import tel.core.s1ap.core.asn.BitOutput;
-import tel.core.s1ap.core.error.S1apException;
 import tel.core.s1ap.core.model.InformationElement;
 
 public final class ForbiddenInterRATs implements InformationElement {
     public enum Value {
-        ALL(0, false),
-        GERAN(1, false),
-        UTRAN(2, false),
-        CDMA2000(3, false),
-        GERANANDUTRAN(0, true),
-        CDMA2000ANDUTRAN(1, true);
+        ALL(0),
+        GERAN(1),
+        UTRAN(2),
+        CDMA2000(3),
+        GERANANDUTRAN(4),
+        CDMA2000ANDUTRAN(5),
+        UNKNOWN(-1);
 
-        private final int index;
-        private final boolean extensionAddition;
-        Value(int index, boolean extensionAddition) {
-            this.index = index;
-            this.extensionAddition = extensionAddition;
-        }
-        public int getCode() { return index; }
-        public boolean isExtensionAddition() { return extensionAddition; }
-        public static Value fromRootIndex(int index) {
-            if (index < 0) throw new S1apException("Negative root index");
-            return fromIndex(index);
-        }
-        public static Value fromExtensionIndex(int index) {
-            if (index < 0) throw new S1apException("Negative extension index");
-            return fromIndex(-index - 1);
-        }
-        private static Value fromIndex(int code) {
-            return switch (code) {
-                case 0 -> ALL;
-                case 1 -> GERAN;
-                case 2 -> UTRAN;
-                case 3 -> CDMA2000;
-                case -1 -> GERANANDUTRAN;
-                case -2 -> CDMA2000ANDUTRAN;
-                default -> throw new S1apException("Unknown ENUMERATED index: " + code);
-            };
+        private static final Map<Integer, Value> BY_CODE = Arrays.stream(values())
+                .collect(Collectors.toMap(Value::getCode, value -> value));
+
+        private final int code;
+
+        Value(int code) { this.code = code; }
+
+        public int getCode() { return code; }
+
+        static Value valueOf(int code) {
+            return BY_CODE.getOrDefault(code, UNKNOWN);
         }
     }
 
@@ -51,7 +39,9 @@ public final class ForbiddenInterRATs implements InformationElement {
 
     public ForbiddenInterRATs(BitInput in) {
         try {
-            this.value = Value.fromIndex(AsnAper.index(in, 4, true, true));
+            int index = AsnAper.index(in, 4, true, true);
+            long code = index < 0 ? 4L - index - 1 : index;
+            this.value = code <= Integer.MAX_VALUE ? Value.valueOf((int) code) : Value.UNKNOWN;
         } catch (RuntimeException e) {
             throw AsnAper.protocol(e);
         }
@@ -63,11 +53,12 @@ public final class ForbiddenInterRATs implements InformationElement {
     }
 
     public Value getValue() { return value; }
-    public int getCode() { return value.index; }
+    public int getCode() { return value.code; }
 
     @Override
     public void encode(BitOutput out) {
-        AsnAper.index(out, value.index, value.extensionAddition, 4, true, true);
+        if (value == Value.UNKNOWN) throw new IllegalStateException("Cannot encode UNKNOWN ENUMERATED value");
+        AsnAper.index(out, value.code >= 4 ? value.code - 4 : value.code, value.code >= 4, 4, true, true);
     }
 
     @Override

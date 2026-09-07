@@ -176,6 +176,19 @@ temporary file и atomic move, где это поддерживает файло
 `--dry-run` выполняет каталогизацию, нормализацию, planning, rendering и
 проверки без записи Java/snippet files. Reports сохраняются.
 
+Для ENUMERATED генерируется вложенный `Value` с полем `code`, картой
+`BY_CODE` через `Arrays.stream(values())`, методом `valueOf(int)` и
+`UNKNOWN(-1)`. Основные варианты получают коды от нуля, расширения —
+последующие коды; при работе с APER они переводятся в отдельные root и
+extension indices. `getCode()` возвращает этот последовательный Java-код.
+
+`valueOf(int)` возвращает `UNKNOWN` для неизвестного кода. В режиме
+`known-additions` неизвестный extension index также декодируется в `UNKNOWN`;
+исходный индекс не сохраняется, поэтому кодирование `UNKNOWN` явно запрещено.
+Политика `root-only` по-прежнему отклоняет extension bit. Если ASN-вариант
+сам называется `unknown`, задайте для него другое имя через `enumAliases`:
+имя `UNKNOWN` зарезервировано для fallback-значения.
+
 ## Неоднозначные и отсутствующие selectors
 
 Приоритет: numeric ID → точное ASN id assignment → точное ASN type → Java alias
@@ -318,7 +331,8 @@ Fail-closed ограничения за пределами проверенно�
 - DEFAULT поддержан для INTEGER; другие DEFAULT требуют расширения normalizer;
 - ENUMERATED с numeric order, отличающимся от source order, требует отдельной
   стратегии переупорядочивания индексов и отклоняется;
-- неизвестные будущие ENUMERATED/CHOICE/SEQUENCE/open-container additions;
+- неизвестные будущие CHOICE/SEQUENCE/open-container additions;
+- обратное кодирование UNKNOWN для ENUMERATED (неизвестный исходный индекс не сохраняется);
 - sequence extension bitmap fragmentation ≥ 16384 additions;
 - semantic API генерируется через явно проверенный existing class;
   произвольные Java templates и автоматическое редактирование facades отсутствуют.

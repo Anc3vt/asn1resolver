@@ -166,6 +166,45 @@ class GeneratedCompilationTest {
             assertEquals("ffff", HexFormat.of().formatHex((byte[]) bitmap.getClass().getMethod("encode").invoke(bitmap)));
         }
     }
+    @Test void enumMapUnknownAndExtensionCodesPreserveWireValues() throws Exception {
+        var doc = Asn1.parse("M DEFINITIONS ::= BEGIN E ::= ENUMERATED { a, b, ..., c, d } END");
+        var normalizer = new com.ancevt.asn1.generate.s1ap.normalize.TypeNormalizer(Overrides.empty(), new JavaNames(Map.of()));
+        var type = normalizer.root("E", "EnumFixture", doc.requireModule("M").requireType("E").getType(), null);
+        Path sources = temp.resolve("enum-sources"); Files.createDirectories(sources);
+        for (boolean known : List.of(false, true)) {
+            String pkg = known ? "enumknown" : "enumroot";
+            Path file = sources.resolve(pkg).resolve("EnumFixture.java"); Files.createDirectories(file.getParent());
+            Files.writeString(file, new com.ancevt.asn1.generate.s1ap.render.JavaRenderer(pkg, known, null).render(type, null, List.of()).source());
+        }
+        try (URLClassLoader fixtures = compileExtra(sources)) {
+            Class<?> input = fixtures.loadClass("tel.core.s1ap.core.asn.BitInput");
+            Class<?> known = fixtures.loadClass("enumknown.EnumFixture"), values = fixtures.loadClass("enumknown.EnumFixture$Value");
+            Method lookup = values.getDeclaredMethod("valueOf", int.class); lookup.setAccessible(true);
+            Object unknown = values.getField("UNKNOWN").get(null);
+            assertSame(unknown, lookup.invoke(null, -1));
+            assertSame(unknown, lookup.invoke(null, 99));
+            for (int i = 0; i < 4; i++) {
+                Object value = lookup.invoke(null, i);
+                assertEquals(i, values.getMethod("getCode").invoke(value));
+                Object element = known.getConstructor(values).newInstance(value);
+                String hex = List.of("00", "40", "80", "81").get(i);
+                assertEquals(hex, HexFormat.of().formatHex((byte[]) known.getMethod("encode").invoke(element)));
+                Object decoded = known.getConstructor(input).newInstance(input.getConstructor(byte[].class)
+                        .newInstance((Object) HexFormat.of().parseHex(hex)));
+                assertSame(value, known.getMethod("getValue").invoke(decoded));
+            }
+            Object decoded = known.getConstructor(input).newInstance(input.getConstructor(byte[].class)
+                    .newInstance((Object) new byte[] {(byte) 0x82}));
+            assertSame(unknown, known.getMethod("getValue").invoke(decoded));
+            InvocationTargetException error = assertThrows(InvocationTargetException.class, () -> known.getMethod("encode").invoke(decoded));
+            assertInstanceOf(IllegalStateException.class, error.getCause());
+            Class<?> root = fixtures.loadClass("enumroot.EnumFixture"), rootValues = fixtures.loadClass("enumroot.EnumFixture$Value");
+            assertThrows(InvocationTargetException.class, () -> root.getConstructor(rootValues).newInstance(rootValues.getField("C").get(null)));
+            error = assertThrows(InvocationTargetException.class, () -> root.getConstructor(input).newInstance(input.getConstructor(byte[].class)
+                    .newInstance((Object) new byte[] {(byte) 0x82})));
+            assertEquals("S1apException", error.getCause().getClass().getSimpleName());
+        }
+    }
     private static URLClassLoader compileExtra(Path sources) throws Exception {
         Path classes = Files.createTempDirectory(temp, "extra-classes"); List<Path> files;
         try (var paths = Files.walk(sources)) { files = paths.filter(p -> p.toString().endsWith(".java")).toList(); }

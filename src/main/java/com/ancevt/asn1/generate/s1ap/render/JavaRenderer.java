@@ -1,6 +1,7 @@
 package com.ancevt.asn1.generate.s1ap.render;
 
 import com.ancevt.asn1.generate.s1ap.docs.Documentation;
+import com.ancevt.asn1.generate.s1ap.diagnostic.GenerationException;
 import com.ancevt.asn1.generate.s1ap.normalize.GenType;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -62,6 +63,7 @@ public final class JavaRenderer {
         String body = code.toString();
         TreeSet<String> imports = new TreeSet<>();
         for (String name : List.of("java.math.BigInteger", "java.util.List", "java.util.Objects",
+                "java.util.Map", "java.util.Arrays", "java.util.stream.Collectors",
                 "tel.core.s1ap.core.asn.AsnAper", "tel.core.s1ap.core.asn.AsnBitString",
                 "tel.core.s1ap.core.asn.AsnPrintableString", "tel.core.s1ap.core.asn.BitInput", "tel.core.s1ap.core.asn.BitOutput",
                 "tel.core.s1ap.core.error.S1apException", "tel.core.s1ap.core.model.InformationElement")) {
@@ -104,9 +106,13 @@ public final class JavaRenderer {
             c.line("    public static final int " + bit.javaName() + " = " + bit.index() + ";");
         c.line("    private final " + type + " " + field + ";\n");
         beginDecode(c, t, refs);
+        if (t.kind() == GenType.Kind.ENUMERATED) {
+            c.line("            int index = AsnAper.index(in, " + rootCount(t) + ", " + t.extensible() + ", " + known + ");");
+            if (t.extensible()) c.line("            long code = index < 0 ? " + rootCount(t) + "L - index - 1 : index;");
+        }
         String decode = switch (t.kind()) {
             case INTEGER -> "AsnAper.integer(in, " + args(t) + ")" + (type.equals("int") ? ".intValueExact()" : type.equals("long") ? ".longValueExact()" : "");
-            case ENUMERATED -> "Value.fromIndex(AsnAper.index(in, " + rootCount(t) + ", " + t.extensible() + ", " + known + "))";
+            case ENUMERATED -> t.extensible() ? "code <= Integer.MAX_VALUE ? Value.valueOf((int) code) : Value.UNKNOWN" : "Value.valueOf(index)";
             case OCTET_STRING -> "AsnAper.octets(in, " + args(t) + ")";
             case BIT_STRING -> "AsnAper.bits(in, " + args(t) + ")" + (scalarBit ? type.equals("int") ? ".toInt()" : type.equals("long") ? ".toLong()" : ".getBytes()" : "");
             case PRINTABLE_STRING -> "AsnPrintableString.decodeAper(in, " + args(t) + ")";
@@ -119,7 +125,7 @@ public final class JavaRenderer {
             case INTEGER -> c.line("        AsnAper.validate(" + big(t, field) + ", " + args(t) + ");");
             case ENUMERATED -> {
                 c.line("        Objects.requireNonNull(value, \"value\");");
-                if (!known) c.line("        if (value.extensionAddition) throw new IllegalArgumentException(\"Extension enum is disabled\");");
+                if (!known) c.line("        if (value.code >= " + rootCount(t) + ") throw new IllegalArgumentException(\"Extension enum is disabled\");");
             }
             default -> {
                 if (!type.equals("int") && !type.equals("long")) c.line("        Objects.requireNonNull(" + field + ", \"" + field + "\");");
@@ -134,11 +140,13 @@ public final class JavaRenderer {
         c.line("        this." + field + " = " + field + (array ? ".clone()" : "") + ";\n    }");
         ctors.add(new Constructor(List.of(new Parameter(type, field)), "new " + t.javaName() + "(" + field + ")", ""));
         c.line("\n    public " + type + " get" + cap(field) + "() { return " + field + (array ? ".clone()" : "") + "; }");
-        if (t.kind() == GenType.Kind.ENUMERATED) c.line("    public int getCode() { return value.index; }");
+        if (t.kind() == GenType.Kind.ENUMERATED) c.line("    public int getCode() { return value.code; }");
         encodeStart(c);
+        if (t.kind() == GenType.Kind.ENUMERATED)
+            c.line("        if (value == Value.UNKNOWN) throw new IllegalStateException(\"Cannot encode UNKNOWN ENUMERATED value\");");
         String encode = switch (t.kind()) {
             case INTEGER -> "AsnAper.integer(out, " + big(t, field) + ", " + args(t) + ");";
-            case ENUMERATED -> "AsnAper.index(out, value.index, value.extensionAddition, " + rootCount(t) + ", " + t.extensible() + ", " + known + ");";
+            case ENUMERATED -> "AsnAper.index(out, value.code >= " + rootCount(t) + " ? value.code - " + rootCount(t) + " : value.code, value.code >= " + rootCount(t) + ", " + rootCount(t) + ", " + t.extensible() + ", " + known + ");";
             case OCTET_STRING -> "AsnAper.octets(out, bytes, " + args(t) + ");";
             case BIT_STRING -> "AsnAper.bits(out, " + (scalarBit ? bitValue(t) : "value") + ", " + args(t) + ");";
             case PRINTABLE_STRING -> "AsnPrintableString.encodeAper(out, value, " + args(t) + ");";
@@ -152,20 +160,20 @@ public final class JavaRenderer {
     }
     private long rootCount(GenType t) { return t.items().stream().filter(i -> !i.extension()).count(); }
     private void enumeration(Code c, GenType t) {
+        if (t.items().stream().anyMatch(i -> i.javaName().equals("UNKNOWN")))
+            throw new GenerationException("JAVA_NAME_COLLISION", 6,
+                    t.asnName() + ": UNKNOWN is reserved for the fallback value; rename the ASN item with enumAliases");
         c.line("    public enum Value {");
-        for (int n = 0; n < t.items().size(); n++) {
-            GenType.Item i = t.items().get(n);
-            c.line("        " + i.javaName() + "(" + i.index() + ", " + i.extension() + ")" + (n == t.items().size() - 1 ? ";" : ","));
-        }
-        c.line("\n        private final int index;\n        private final boolean extensionAddition;");
-        c.line("        Value(int index, boolean extensionAddition) {\n            this.index = index;\n            this.extensionAddition = extensionAddition;\n        }");
-        c.line("        public int getCode() { return index; }");
-        c.line("        public boolean isExtensionAddition() { return extensionAddition; }");
-        c.line("        public static Value fromRootIndex(int index) {\n            if (index < 0) throw new S1apException(\"Negative root index\");\n            return fromIndex(index);\n        }");
-        c.line("        public static Value fromExtensionIndex(int index) {\n            if (index < 0) throw new S1apException(\"Negative extension index\");\n            return fromIndex(-index - 1);\n        }");
-        c.line("        private static Value fromIndex(int code) {\n            return switch (code) {");
-        for (GenType.Item i : t.items()) c.line("                case " + (i.extension() ? -i.index() - 1 : i.index()) + " -> " + i.javaName() + ";");
-        c.line("                default -> throw new S1apException(\"Unknown ENUMERATED index: \" + code);\n            };\n        }\n    }\n");
+        for (GenType.Item i : t.items())
+            c.line("        " + i.javaName() + "(" + (i.extension() ? rootCount(t) + i.index() : i.index()) + "),");
+        c.line("        UNKNOWN(-1);\n");
+        c.line("        private static final Map<Integer, Value> BY_CODE = Arrays.stream(values())");
+        c.line("                .collect(Collectors.toMap(Value::getCode, value -> value));\n");
+        c.line("        private final int code;\n");
+        c.line("        Value(int code) { this.code = code; }\n");
+        c.line("        public int getCode() { return code; }\n");
+        c.line("        static Value valueOf(int code) {");
+        c.line("            return BY_CODE.getOrDefault(code, UNKNOWN);\n        }\n    }\n");
     }
     private void fields(Code c, GenType t) {
         for (GenType.Field f : t.fields()) c.line("    private final " + f.publicType() + " " + f.javaName() + ";");
