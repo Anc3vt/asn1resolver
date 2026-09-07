@@ -1,0 +1,3 @@
+register(ProtocolIeId.ENB_NAME, EnbName::new);
+register(ProtocolIeId.GLOBAL_ENB_ID, GlobalEnbId::new);
+register(ProtocolIeId.E_RAB_SETUP_LIST_CTXT_SU_RES, ERabSetupList::new);

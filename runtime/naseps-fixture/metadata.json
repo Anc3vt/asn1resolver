@@ -1,0 +1,23 @@
+{
+  "sourceRepository": "https://github.com/Anc3vt/tmpproj",
+  "baseRevision": "27e19214d7e8415090ccaae70ec5f8062a3270d2",
+  "prerequisitePatch": "naseps-aper-v1.patch",
+  "files": {
+    "src/main/java/tel/core/s1ap/core/asn/AsnAper.java": "81e2ecac18f5b70d29134230fb78fbe54fff04390a3a5ca5c178e377fea5fbb7",
+    "src/main/java/tel/core/s1ap/core/asn/AsnBitString.java": "bbc07f3d465573ae9a9104444ccdd2d59b6c0ed2ed55c3f94d341fe3da0b76f3",
+    "src/main/java/tel/core/s1ap/core/asn/AsnBoolean.java": "98ca210a8df838c9c035ce87e17b4d5e3fc9f2f0a0081e83bf7bfb3fbea2b8f1",
+    "src/main/java/tel/core/s1ap/core/asn/AsnEnumerated.java": "674e64f92e01f6ec574569c1b34605be11356576a7357ad51d15510468404e94",
+    "src/main/java/tel/core/s1ap/core/asn/AsnInteger.java": "8de9f6f1d280d5d45cbae4225b585b62e552cfc57eee1655a8d8f21f548147d6",
+    "src/main/java/tel/core/s1ap/core/asn/AsnOctetString.java": "c55fa53bc3bba7a6b26389e6711853fb9ca0270c3588c82af22ab58d068e6549",
+    "src/main/java/tel/core/s1ap/core/asn/AsnOpenType.java": "179e6488def255985c8f951ca62c24f9f0671a516d49f2e1dd789cbfa47b3035",
+    "src/main/java/tel/core/s1ap/core/asn/AsnPrintableString.java": "4ef2f057049ef815f75ea8d2d49cac5f6359d1520e83ebc7d26d9db94bd7124d",
+    "src/main/java/tel/core/s1ap/core/asn/BitCursor.java": "e0e153b9529d1a3d71601a56828b59faf010a2cfc92c1acf04cabfece9a953fe",
+    "src/main/java/tel/core/s1ap/core/asn/BitInput.java": "9f0b83608ea34e05adac0d94f2ea4e9665e12178b15c3efe1a3b9f52fe352d30",
+    "src/main/java/tel/core/s1ap/core/asn/BitOutput.java": "7ae1d0fcf01ca63cd62ac74b331c65100d45b197d4d2275ea37a48fd8d89da58",
+    "src/main/java/tel/core/s1ap/core/model/InformationElement.java": "502cc23008cb9fb8f9cdc4398b8eb94574a1b28baca8e65ed8ea96c6b4b7f9c4",
+    "src/main/java/tel/core/s1ap/core/model/InformationElementDecoderRegistry.java": "b0381506cf29a105f427189a7425212de215c1c492c3e337a4634b7817556e5b",
+    "src/main/java/tel/core/s1ap/core/model/Criticality.java": "bd6ab9f0a5c4bcb5a0e091255cd20a27ebee7afb26dd9700d22acf3d0af85fdc",
+    "src/main/java/tel/core/s1ap/core/error/S1apException.java": "6b54dc036f7def3c9055435e32b05e4b8faf28657decd2014e033788f8a1fa6e",
+    "src/main/java/tel/core/s1ap/spec/ProtocolIeId.java": "bb74a0531546bb0aa00735f35a36ee5cff7b75262eb749729fa959587c50026b"
+  }
+}

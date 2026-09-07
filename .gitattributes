@@ -1,0 +1,6 @@
+s1ap.asn text eol=lf
+config/** text eol=lf
+examples/** text eol=lf
+runtime/** text eol=lf
+src/main/resources/** text eol=lf
+src/test/resources/** text eol=lf

@@ -1,0 +1,273 @@
+{
+  "schemaVersion": 1,
+  "specVersion": "15.3.0",
+  "asnSha256": "e716350a28fe5d5a7bdfdbbc9c8c216924869ca41b489be3dc2ef88e072efabf",
+  "reference": "pycrate 0.8.1, pycrate_asn1c.compile_text on the complete pinned input",
+  "source": "https://github.com/P1sec/pycrate",
+  "vectors": [
+    {
+      "name": "mme-id-0",
+      "asnType": "MME-UE-S1AP-ID",
+      "javaClass": "MmeUeS1apId",
+      "extension": false,
+      "value": "0",
+      "hex": "0000"
+    },
+    {
+      "name": "mme-id-255",
+      "asnType": "MME-UE-S1AP-ID",
+      "javaClass": "MmeUeS1apId",
+      "extension": false,
+      "value": "255",
+      "hex": "00ff"
+    },
+    {
+      "name": "mme-id-256",
+      "asnType": "MME-UE-S1AP-ID",
+      "javaClass": "MmeUeS1apId",
+      "extension": false,
+      "value": "256",
+      "hex": "400100"
+    },
+    {
+      "name": "mme-id-65535",
+      "asnType": "MME-UE-S1AP-ID",
+      "javaClass": "MmeUeS1apId",
+      "extension": false,
+      "value": "65535",
+      "hex": "40ffff"
+    },
+    {
+      "name": "mme-id-65536",
+      "asnType": "MME-UE-S1AP-ID",
+      "javaClass": "MmeUeS1apId",
+      "extension": false,
+      "value": "65536",
+      "hex": "80010000"
+    },
+    {
+      "name": "mme-id-4294967295",
+      "asnType": "MME-UE-S1AP-ID",
+      "javaClass": "MmeUeS1apId",
+      "extension": false,
+      "value": "4294967295",
+      "hex": "c0ffffffff"
+    },
+    {
+      "name": "enb-name-length-1",
+      "asnType": "ENBname",
+      "javaClass": "EnbName",
+      "extension": false,
+      "value": "'A'",
+      "hex": "000041"
+    },
+    {
+      "name": "enb-name-length-8",
+      "asnType": "ENBname",
+      "javaClass": "EnbName",
+      "extension": false,
+      "value": "'Test eNB'",
+      "hex": "03805465737420654e42"
+    },
+    {
+      "name": "enb-name-length-150",
+      "asnType": "ENBname",
+      "javaClass": "EnbName",
+      "extension": false,
+      "value": "'ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ'",
+      "hex": "4a805a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a"
+    },
+    {
+      "name": "enb-name-length-151",
+      "asnType": "ENBname",
+      "javaClass": "EnbName",
+      "extension": true,
+      "value": "'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'",
+      "hex": "80809758585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858585858"
+    },
+    {
+      "name": "time-to-wait-v1s",
+      "asnType": "TimeToWait",
+      "javaClass": "TimeToWait",
+      "extension": false,
+      "value": "'v1s'",
+      "hex": "00"
+    },
+    {
+      "name": "time-to-wait-v2s",
+      "asnType": "TimeToWait",
+      "javaClass": "TimeToWait",
+      "extension": false,
+      "value": "'v2s'",
+      "hex": "10"
+    },
+    {
+      "name": "time-to-wait-v5s",
+      "asnType": "TimeToWait",
+      "javaClass": "TimeToWait",
+      "extension": false,
+      "value": "'v5s'",
+      "hex": "20"
+    },
+    {
+      "name": "time-to-wait-v10s",
+      "asnType": "TimeToWait",
+      "javaClass": "TimeToWait",
+      "extension": false,
+      "value": "'v10s'",
+      "hex": "30"
+    },
+    {
+      "name": "time-to-wait-v20s",
+      "asnType": "TimeToWait",
+      "javaClass": "TimeToWait",
+      "extension": false,
+      "value": "'v20s'",
+      "hex": "40"
+    },
+    {
+      "name": "time-to-wait-v60s",
+      "asnType": "TimeToWait",
+      "javaClass": "TimeToWait",
+      "extension": false,
+      "value": "'v60s'",
+      "hex": "50"
+    },
+    {
+      "name": "forbidden-all",
+      "asnType": "ForbiddenInterRATs",
+      "javaClass": "ForbiddenInterRATs",
+      "extension": false,
+      "value": "'all'",
+      "hex": "00"
+    },
+    {
+      "name": "forbidden-geran",
+      "asnType": "ForbiddenInterRATs",
+      "javaClass": "ForbiddenInterRATs",
+      "extension": false,
+      "value": "'geran'",
+      "hex": "20"
+    },
+    {
+      "name": "forbidden-utran",
+      "asnType": "ForbiddenInterRATs",
+      "javaClass": "ForbiddenInterRATs",
+      "extension": false,
+      "value": "'utran'",
+      "hex": "40"
+    },
+    {
+      "name": "forbidden-cdma2000",
+      "asnType": "ForbiddenInterRATs",
+      "javaClass": "ForbiddenInterRATs",
+      "extension": false,
+      "value": "'cdma2000'",
+      "hex": "60"
+    },
+    {
+      "name": "forbidden-geranandutran",
+      "asnType": "ForbiddenInterRATs",
+      "javaClass": "ForbiddenInterRATs",
+      "extension": true,
+      "value": "'geranandutran'",
+      "hex": "80"
+    },
+    {
+      "name": "forbidden-cdma2000andutran",
+      "asnType": "ForbiddenInterRATs",
+      "javaClass": "ForbiddenInterRATs",
+      "extension": true,
+      "value": "'cdma2000andutran'",
+      "hex": "81"
+    },
+    {
+      "name": "fixed-teid",
+      "asnType": "GTP-TEID",
+      "javaClass": "GtpTeid",
+      "extension": false,
+      "value": "b'\\x124Vx'",
+      "hex": "12345678"
+    },
+    {
+      "name": "macroENB-ID",
+      "asnType": "Global-ENB-ID",
+      "javaClass": "GlobalEnbId",
+      "extension": false,
+      "value": "{'pLMNidentity': b'R\\xf0\\x99', 'eNB-ID': ('macroENB-ID', (74565, 20))}",
+      "hex": "0052f09900123450"
+    },
+    {
+      "name": "homeENB-ID",
+      "asnType": "Global-ENB-ID",
+      "javaClass": "GlobalEnbId",
+      "extension": false,
+      "value": "{'pLMNidentity': b'R\\xf0\\x99', 'eNB-ID': ('homeENB-ID', (74565, 28))}",
+      "hex": "0052f0994000123450"
+    },
+    {
+      "name": "short-macroENB-ID",
+      "asnType": "Global-ENB-ID",
+      "javaClass": "GlobalEnbId",
+      "extension": true,
+      "value": "{'pLMNidentity': b'R\\xf0\\x99', 'eNB-ID': ('short-macroENB-ID', (74565, 18))}",
+      "hex": "0052f099800348d140"
+    },
+    {
+      "name": "long-macroENB-ID",
+      "asnType": "Global-ENB-ID",
+      "javaClass": "GlobalEnbId",
+      "extension": true,
+      "value": "{'pLMNidentity': b'R\\xf0\\x99', 'eNB-ID': ('long-macroENB-ID', (74565, 21))}",
+      "hex": "0052f0998103091a28"
+    },
+    {
+      "name": "restriction-optional-list",
+      "asnType": "HandoverRestrictionList",
+      "javaClass": "HandoverRestrictionList",
+      "extension": false,
+      "value": "{'servingPLMN': b'R\\xf0\\x99', 'equivalentPLMNs': [b'R\\xf0\\x10'], 'forbiddenTAs': [{'pLMN-Identity': b'R\\xf0\\x99', 'forbiddenTACs': [b'\\x00\\x01', b'\\xff\\xff']}], 'forbiddenInterRATs': 'geran'}",
+      "hex": "6852f0990052f0100052f09900010001ffff20"
+    },
+    {
+      "name": "restriction-protocol-extension",
+      "asnType": "HandoverRestrictionList",
+      "javaClass": "HandoverRestrictionList",
+      "extension": false,
+      "value": "{'servingPLMN': b'R\\xf0\\x99', 'iE-Extensions': [{'id': 261, 'criticality': 'ignore', 'extensionValue': (('S1AP-IEs', 'NRrestrictioninEPSasSecondaryRAT'), 'nRrestrictedinEPSasSecondaryRAT')}]}",
+      "hex": "0452f09900000105400100"
+    },
+    {
+      "name": "single-container-list",
+      "asnType": "E-RABSetupListCtxtSURes",
+      "javaClass": "ERabSetupList",
+      "extension": false,
+      "value": "[{'id': 50, 'criticality': 'ignore', 'value': (('S1AP-PDU-Contents', 'E-RABSetupItemCtxtSURes'), {'e-RAB-ID': 5, 'transportLayerAddress': (167772161, 32), 'gTP-TEID': b'\\x124Vx'})}]",
+      "hex": "000032400a0a1f0a00000112345678"
+    },
+    {
+      "name": "usage-count-0",
+      "asnType": "E-RABUsageReportItem",
+      "javaClass": "ERabUsageReportItem",
+      "extension": false,
+      "value": "{'startTimestamp': b'\\x01\\x02\\x03\\x04', 'endTimestamp': b'\\x05\\x06\\x07\\x08', 'usageCountUL': 0, 'usageCountDL': 0}",
+      "hex": "00010203040506070800000000"
+    },
+    {
+      "name": "usage-count-9223372036854775808",
+      "asnType": "E-RABUsageReportItem",
+      "javaClass": "ERabUsageReportItem",
+      "extension": false,
+      "value": "{'startTimestamp': b'\\x01\\x02\\x03\\x04', 'endTimestamp': b'\\x05\\x06\\x07\\x08', 'usageCountUL': 9223372036854775808, 'usageCountDL': 18446744073709551615}",
+      "hex": "000102030405060708e08000000000000000e0ffffffffffffffff"
+    },
+    {
+      "name": "inline-s1-message",
+      "asnType": "Value",
+      "javaClass": "S1Message",
+      "extension": false,
+      "value": "b'\\x01\\x02\\x03'",
+      "hex": "03010203"
+    }
+  ]
+}

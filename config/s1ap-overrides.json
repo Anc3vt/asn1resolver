@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "acronyms": { "ENB": "Enb", "MME": "Mme", "TEID": "Teid", "EUTRAN": "Eutran", "ECGI": "Ecgi" },
+  "ies": {
+    "137": { "javaClass": "DefaultPagingDrx", "factoryMethod": "defaultPagingDrx" },
+    "51": { "javaClass": "ERabSetupList", "factoryMethod": "erabSetupList", "protocolIeConstant": "E_RAB_SETUP_LIST_CTXT_SU_RES" }
+  },
+  "types": {
+    "PLMNidentity": { "javaClass": "PlmnIdentity" },
+    "ECGI-List": { "javaClass": "EcgiCellList" },
+    "E-RABSetupItemCtxtSURes": { "javaClass": "ERabSetupItem" }
+  },
+  "docs": { "60": { "primary": "s1-setup-request" } }
+}

@@ -1,0 +1,1086 @@
+{
+  "reportSchemaVersion" : 1,
+  "generatorVersion" : "1.0.0",
+  "diagnostics" : [ ],
+  "command" : "generate",
+  "asn" : {
+    "path" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+    "sha256" : "e716350a28fe5d5a7bdfdbbc9c8c216924869ca41b489be3dc2ef88e072efabf",
+    "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+    "version" : "15.3.0",
+    "modules" : 6,
+    "assignments" : 1322,
+    "errors" : 0
+  },
+  "configHashes" : {
+    "docsIndex" : "4058766b2435ade414b74dd0329e0d7a5c20b73f2a99c20d4c6c4b2bed58a600",
+    "overrides" : "5ce44e616498a78c59f9c506dca30125959b1f0cac39aa41ae0b17100bff3855"
+  },
+  "catalog" : {
+    "declared" : 279,
+    "mapped" : 271
+  },
+  "runtimeCapabilities" : [ "AsnAper-v1" ],
+  "runtimeValidation" : "Bundled prerequisite required; no target supplied",
+  "extensionPolicy" : "root-only",
+  "dependencyPolicy" : "closure",
+  "selectors" : [ {
+    "selector" : "60",
+    "resolutionMethod" : "numeric ID",
+    "id" : 60,
+    "idAssignment" : "id-eNBname",
+    "asnType" : "ENBname",
+    "javaClass" : "EnbName",
+    "factoryMethod" : "enbName",
+    "usages" : [ {
+      "kind" : "Value",
+      "criticality" : "ignore",
+      "presence" : "optional",
+      "owner" : "S1SetupRequestIEs",
+      "messages" : [ "S1SetupRequest" ],
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 93533,
+        "endOffset" : 93608,
+        "startLine" : 2604,
+        "startColumn" : 2,
+        "endLine" : 2604,
+        "endColumn" : 77
+      }
+    }, {
+      "kind" : "Value",
+      "criticality" : "ignore",
+      "presence" : "optional",
+      "owner" : "ENBConfigurationUpdateIEs",
+      "messages" : [ "ENBConfigurationUpdate" ],
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 96249,
+        "endOffset" : 96324,
+        "startLine" : 2673,
+        "startColumn" : 2,
+        "endLine" : 2673,
+        "endColumn" : 77
+      }
+    } ],
+    "cycles" : [ ],
+    "protocolIeConstant" : "ENB_NAME",
+    "documentationSections" : [ "s1-setup-request" ],
+    "appliedOverrides" : { },
+    "dependencies" : [ {
+      "class" : "EnbName",
+      "status" : "generated",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 161599,
+        "endOffset" : 161634,
+        "startLine" : 4732,
+        "startColumn" : 13,
+        "endLine" : 4732,
+        "endColumn" : 48
+      }
+    } ],
+    "ir" : [ {
+      "asnName" : "ENBname",
+      "javaName" : "EnbName",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 161599,
+        "endOffset" : 161634,
+        "startLine" : 4732,
+        "startColumn" : 13,
+        "endLine" : 4732,
+        "endColumn" : 48
+      },
+      "kind" : "PRINTABLE_STRING",
+      "bounds" : {
+        "intervals" : [ {
+          "min" : 1,
+          "max" : 150
+        } ],
+        "extensible" : true
+      },
+      "extensible" : true,
+      "representation" : "String",
+      "fields" : [ ],
+      "items" : [ ],
+      "elementType" : null,
+      "alternatives" : [ ],
+      "aliases" : [ ],
+      "dependencies" : [ ],
+      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "overrides" : { }
+    } ],
+    "extensionOnlyBuilderSuppressed" : false
+  }, {
+    "selector" : "Global-ENB-ID",
+    "resolutionMethod" : "ASN type",
+    "id" : 59,
+    "idAssignment" : "id-Global-ENB-ID",
+    "asnType" : "Global-ENB-ID",
+    "javaClass" : "GlobalEnbId",
+    "factoryMethod" : "globalEnbId",
+    "usages" : [ {
+      "kind" : "Value",
+      "criticality" : "reject",
+      "presence" : "mandatory",
+      "owner" : "S1SetupRequestIEs",
+      "messages" : [ "S1SetupRequest" ],
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 93445,
+        "endOffset" : 93530,
+        "startLine" : 2603,
+        "startColumn" : 2,
+        "endLine" : 2603,
+        "endColumn" : 87
+      }
+    }, {
+      "kind" : "Value",
+      "criticality" : "reject",
+      "presence" : "mandatory",
+      "owner" : "PWSRestartIndicationIEs",
+      "messages" : [ "PWSRestartIndication" ],
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 120472,
+        "endOffset" : 120560,
+        "startLine" : 3340,
+        "startColumn" : 2,
+        "endLine" : 3340,
+        "endColumn" : 90
+      }
+    }, {
+      "kind" : "Value",
+      "criticality" : "reject",
+      "presence" : "mandatory",
+      "owner" : "PWSFailureIndicationIEs",
+      "messages" : [ "PWSFailureIndication" ],
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 121200,
+        "endOffset" : 121282,
+        "startLine" : 3359,
+        "startColumn" : 2,
+        "endLine" : 3359,
+        "endColumn" : 84
+      }
+    } ],
+    "cycles" : [ ],
+    "protocolIeConstant" : "GLOBAL_ENB_ID",
+    "documentationSections" : [ "global-enb-id" ],
+    "appliedOverrides" : { },
+    "dependencies" : [ {
+      "class" : "GlobalEnbId",
+      "status" : "generated",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 160701,
+        "endOffset" : 160849,
+        "startLine" : 4696,
+        "startColumn" : 19,
+        "endLine" : 4701,
+        "endColumn" : 2
+      }
+    }, {
+      "class" : "PlmnIdentity",
+      "status" : "generated",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 160728,
+        "endOffset" : 160740,
+        "startLine" : 4697,
+        "startColumn" : 17,
+        "endLine" : 4697,
+        "endColumn" : 29
+      }
+    }, {
+      "class" : "EnbId",
+      "status" : "generated",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 160754,
+        "endOffset" : 160760,
+        "startLine" : 4698,
+        "startColumn" : 13,
+        "endLine" : 4698,
+        "endColumn" : 19
+      }
+    }, {
+      "class" : "GlobalEnbIdIeExtensions",
+      "status" : "generated",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 160779,
+        "endOffset" : 160831,
+        "startLine" : 4699,
+        "startColumn" : 18,
+        "endLine" : 4699,
+        "endColumn" : 70
+      }
+    }, {
+      "class" : "EnbIdMacroEnbId",
+      "status" : "generated",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 160264,
+        "endOffset" : 160285,
+        "startLine" : 4675,
+        "startColumn" : 16,
+        "endLine" : 4675,
+        "endColumn" : 37
+      }
+    }, {
+      "class" : "EnbIdHomeEnbId",
+      "status" : "generated",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 160301,
+        "endOffset" : 160322,
+        "startLine" : 4676,
+        "startColumn" : 15,
+        "endLine" : 4676,
+        "endColumn" : 36
+      }
+    }, {
+      "class" : "EnbIdShortMacroEnbId",
+      "status" : "generated",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 160351,
+        "endOffset" : 160372,
+        "startLine" : 4678,
+        "startColumn" : 21,
+        "endLine" : 4678,
+        "endColumn" : 42
+      }
+    }, {
+      "class" : "EnbIdLongMacroEnbId",
+      "status" : "generated",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 160393,
+        "endOffset" : 160414,
+        "startLine" : 4679,
+        "startColumn" : 20,
+        "endLine" : 4679,
+        "endColumn" : 41
+      }
+    } ],
+    "ir" : [ {
+      "asnName" : "Global-ENB-ID",
+      "javaName" : "GlobalEnbId",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 160701,
+        "endOffset" : 160849,
+        "startLine" : 4696,
+        "startColumn" : 19,
+        "endLine" : 4701,
+        "endColumn" : 2
+      },
+      "kind" : "SEQUENCE",
+      "bounds" : null,
+      "extensible" : true,
+      "representation" : "",
+      "fields" : [ {
+        "asnName" : "pLMNidentity",
+        "javaName" : "plmnIdentity",
+        "javaType" : "PlmnIdentity",
+        "optional" : false,
+        "extension" : false,
+        "defaultExpression" : null,
+        "emptyAbsentElementType" : null,
+        "sourceRange" : {
+          "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+          "startOffset" : 160713,
+          "endOffset" : 160740,
+          "startLine" : 4697,
+          "startColumn" : 2,
+          "endLine" : 4697,
+          "endColumn" : 29
+        }
+      }, {
+        "asnName" : "eNB-ID",
+        "javaName" : "enbId",
+        "javaType" : "EnbId",
+        "optional" : false,
+        "extension" : false,
+        "defaultExpression" : null,
+        "emptyAbsentElementType" : null,
+        "sourceRange" : {
+          "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+          "startOffset" : 160743,
+          "endOffset" : 160760,
+          "startLine" : 4698,
+          "startColumn" : 2,
+          "endLine" : 4698,
+          "endColumn" : 19
+        }
+      }, {
+        "asnName" : "iE-Extensions",
+        "javaName" : "ieExtensions",
+        "javaType" : "GlobalEnbIdIeExtensions",
+        "optional" : true,
+        "extension" : false,
+        "defaultExpression" : null,
+        "emptyAbsentElementType" : null,
+        "sourceRange" : {
+          "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+          "startOffset" : 160763,
+          "endOffset" : 160841,
+          "startLine" : 4699,
+          "startColumn" : 2,
+          "endLine" : 4699,
+          "endColumn" : 80
+        }
+      } ],
+      "items" : [ ],
+      "elementType" : null,
+      "alternatives" : [ ],
+      "aliases" : [ ],
+      "dependencies" : [ "PlmnIdentity", "EnbId", "GlobalEnbIdIeExtensions" ],
+      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "overrides" : { }
+    }, {
+      "asnName" : "PLMNidentity",
+      "javaName" : "PlmnIdentity",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 160728,
+        "endOffset" : 160740,
+        "startLine" : 4697,
+        "startColumn" : 17,
+        "endLine" : 4697,
+        "endColumn" : 29
+      },
+      "kind" : "OCTET_STRING",
+      "bounds" : {
+        "intervals" : [ {
+          "min" : 3,
+          "max" : 3
+        } ],
+        "extensible" : false
+      },
+      "extensible" : false,
+      "representation" : "byte[]",
+      "fields" : [ ],
+      "items" : [ ],
+      "elementType" : null,
+      "alternatives" : [ ],
+      "aliases" : [ "PLMNidentity", "TBCD-STRING" ],
+      "dependencies" : [ ],
+      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "overrides" : {
+        "javaClass" : "\"PlmnIdentity\"",
+        "source" : "config\\s1ap-overrides.json"
+      }
+    }, {
+      "asnName" : "ENB-ID",
+      "javaName" : "EnbId",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 160754,
+        "endOffset" : 160760,
+        "startLine" : 4698,
+        "startColumn" : 13,
+        "endLine" : 4698,
+        "endColumn" : 19
+      },
+      "kind" : "CHOICE",
+      "bounds" : null,
+      "extensible" : true,
+      "representation" : "",
+      "fields" : [ {
+        "asnName" : "macroENB-ID",
+        "javaName" : "macroEnbId",
+        "javaType" : "EnbIdMacroEnbId",
+        "optional" : false,
+        "extension" : false,
+        "defaultExpression" : null,
+        "emptyAbsentElementType" : null,
+        "sourceRange" : {
+          "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+          "startOffset" : 160250,
+          "endOffset" : 160285,
+          "startLine" : 4675,
+          "startColumn" : 2,
+          "endLine" : 4675,
+          "endColumn" : 37
+        }
+      }, {
+        "asnName" : "homeENB-ID",
+        "javaName" : "homeEnbId",
+        "javaType" : "EnbIdHomeEnbId",
+        "optional" : false,
+        "extension" : false,
+        "defaultExpression" : null,
+        "emptyAbsentElementType" : null,
+        "sourceRange" : {
+          "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+          "startOffset" : 160288,
+          "endOffset" : 160322,
+          "startLine" : 4676,
+          "startColumn" : 2,
+          "endLine" : 4676,
+          "endColumn" : 36
+        }
+      }, {
+        "asnName" : "short-macroENB-ID",
+        "javaName" : "shortMacroEnbId",
+        "javaType" : "EnbIdShortMacroEnbId",
+        "optional" : false,
+        "extension" : true,
+        "defaultExpression" : null,
+        "emptyAbsentElementType" : null,
+        "sourceRange" : {
+          "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+          "startOffset" : 160332,
+          "endOffset" : 160372,
+          "startLine" : 4678,
+          "startColumn" : 2,
+          "endLine" : 4678,
+          "endColumn" : 42
+        }
+      }, {
+        "asnName" : "long-macroENB-ID",
+        "javaName" : "longMacroEnbId",
+        "javaType" : "EnbIdLongMacroEnbId",
+        "optional" : false,
+        "extension" : true,
+        "defaultExpression" : null,
+        "emptyAbsentElementType" : null,
+        "sourceRange" : {
+          "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+          "startOffset" : 160375,
+          "endOffset" : 160414,
+          "startLine" : 4679,
+          "startColumn" : 2,
+          "endLine" : 4679,
+          "endColumn" : 41
+        }
+      } ],
+      "items" : [ ],
+      "elementType" : null,
+      "alternatives" : [ ],
+      "aliases" : [ "ENB-ID" ],
+      "dependencies" : [ "EnbIdMacroEnbId", "EnbIdHomeEnbId", "EnbIdShortMacroEnbId", "EnbIdLongMacroEnbId" ],
+      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "overrides" : { }
+    }, {
+      "asnName" : "EnbIdMacroEnbId",
+      "javaName" : "EnbIdMacroEnbId",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 160264,
+        "endOffset" : 160285,
+        "startLine" : 4675,
+        "startColumn" : 16,
+        "endLine" : 4675,
+        "endColumn" : 37
+      },
+      "kind" : "BIT_STRING",
+      "bounds" : {
+        "intervals" : [ {
+          "min" : 20,
+          "max" : 20
+        } ],
+        "extensible" : false
+      },
+      "extensible" : false,
+      "representation" : "AsnBitString.Value",
+      "fields" : [ ],
+      "items" : [ ],
+      "elementType" : null,
+      "alternatives" : [ ],
+      "aliases" : [ ],
+      "dependencies" : [ ],
+      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "overrides" : { }
+    }, {
+      "asnName" : "EnbIdHomeEnbId",
+      "javaName" : "EnbIdHomeEnbId",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 160301,
+        "endOffset" : 160322,
+        "startLine" : 4676,
+        "startColumn" : 15,
+        "endLine" : 4676,
+        "endColumn" : 36
+      },
+      "kind" : "BIT_STRING",
+      "bounds" : {
+        "intervals" : [ {
+          "min" : 28,
+          "max" : 28
+        } ],
+        "extensible" : false
+      },
+      "extensible" : false,
+      "representation" : "AsnBitString.Value",
+      "fields" : [ ],
+      "items" : [ ],
+      "elementType" : null,
+      "alternatives" : [ ],
+      "aliases" : [ ],
+      "dependencies" : [ ],
+      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "overrides" : { }
+    }, {
+      "asnName" : "EnbIdShortMacroEnbId",
+      "javaName" : "EnbIdShortMacroEnbId",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 160351,
+        "endOffset" : 160372,
+        "startLine" : 4678,
+        "startColumn" : 21,
+        "endLine" : 4678,
+        "endColumn" : 42
+      },
+      "kind" : "BIT_STRING",
+      "bounds" : {
+        "intervals" : [ {
+          "min" : 18,
+          "max" : 18
+        } ],
+        "extensible" : false
+      },
+      "extensible" : false,
+      "representation" : "AsnBitString.Value",
+      "fields" : [ ],
+      "items" : [ ],
+      "elementType" : null,
+      "alternatives" : [ ],
+      "aliases" : [ ],
+      "dependencies" : [ ],
+      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "overrides" : { }
+    }, {
+      "asnName" : "EnbIdLongMacroEnbId",
+      "javaName" : "EnbIdLongMacroEnbId",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 160393,
+        "endOffset" : 160414,
+        "startLine" : 4679,
+        "startColumn" : 20,
+        "endLine" : 4679,
+        "endColumn" : 41
+      },
+      "kind" : "BIT_STRING",
+      "bounds" : {
+        "intervals" : [ {
+          "min" : 21,
+          "max" : 21
+        } ],
+        "extensible" : false
+      },
+      "extensible" : false,
+      "representation" : "AsnBitString.Value",
+      "fields" : [ ],
+      "items" : [ ],
+      "elementType" : null,
+      "alternatives" : [ ],
+      "aliases" : [ ],
+      "dependencies" : [ ],
+      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "overrides" : { }
+    }, {
+      "asnName" : "GlobalEnbIdIeExtensions",
+      "javaName" : "GlobalEnbIdIeExtensions",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 160779,
+        "endOffset" : 160831,
+        "startLine" : 4699,
+        "startColumn" : 18,
+        "endLine" : 4699,
+        "endColumn" : 70
+      },
+      "kind" : "CONTAINER",
+      "bounds" : {
+        "intervals" : [ {
+          "min" : 1,
+          "max" : 65535
+        } ],
+        "extensible" : false
+      },
+      "extensible" : false,
+      "representation" : "multiple",
+      "fields" : [ ],
+      "items" : [ ],
+      "elementType" : null,
+      "alternatives" : [ ],
+      "aliases" : [ "ProtocolExtensionContainer" ],
+      "dependencies" : [ ],
+      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "overrides" : { }
+    } ],
+    "extensionOnlyBuilderSuppressed" : false
+  }, {
+    "selector" : "51",
+    "resolutionMethod" : "numeric ID",
+    "id" : 51,
+    "idAssignment" : "id-E-RABSetupListCtxtSURes",
+    "asnType" : "E-RABSetupListCtxtSURes",
+    "javaClass" : "ERabSetupList",
+    "factoryMethod" : "erabSetupList",
+    "usages" : [ {
+      "kind" : "Value",
+      "criticality" : "ignore",
+      "presence" : "mandatory",
+      "owner" : "InitialContextSetupResponseIEs",
+      "messages" : [ "InitialContextSetupResponse" ],
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 69798,
+        "endOffset" : 69902,
+        "startLine" : 2045,
+        "startColumn" : 2,
+        "endLine" : 2045,
+        "endColumn" : 106
+      }
+    } ],
+    "cycles" : [ ],
+    "protocolIeConstant" : "E_RAB_SETUP_LIST_CTXT_SU_RES",
+    "documentationSections" : [ "initial-context-setup-response" ],
+    "appliedOverrides" : {
+      "javaClass" : "ERabSetupList",
+      "factoryMethod" : "erabSetupList",
+      "protocolIeConstant" : "E_RAB_SETUP_LIST_CTXT_SU_RES"
+    },
+    "dependencies" : [ {
+      "class" : "ERabSetupList",
+      "status" : "generated",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 70148,
+        "endOffset" : 70245,
+        "startLine" : 2052,
+        "startColumn" : 29,
+        "endLine" : 2052,
+        "endColumn" : 126
+      }
+    }, {
+      "class" : "ERabSetupItem",
+      "status" : "generated",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 70439,
+        "endOffset" : 70647,
+        "startLine" : 2059,
+        "startColumn" : 29,
+        "endLine" : 2065,
+        "endColumn" : 2
+      }
+    }, {
+      "class" : "ERabId",
+      "status" : "generated",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 70465,
+        "endOffset" : 70473,
+        "startLine" : 2060,
+        "startColumn" : 16,
+        "endLine" : 2060,
+        "endColumn" : 24
+      }
+    }, {
+      "class" : "TransportLayerAddress",
+      "status" : "generated",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 70501,
+        "endOffset" : 70522,
+        "startLine" : 2061,
+        "startColumn" : 27,
+        "endLine" : 2061,
+        "endColumn" : 48
+      }
+    }, {
+      "class" : "GtpTeid",
+      "status" : "generated",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 70539,
+        "endOffset" : 70547,
+        "startLine" : 2062,
+        "startColumn" : 16,
+        "endLine" : 2062,
+        "endColumn" : 24
+      }
+    }, {
+      "class" : "ERabSetupItemIeExtensions",
+      "status" : "generated",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 70568,
+        "endOffset" : 70630,
+        "startLine" : 2063,
+        "startColumn" : 20,
+        "endLine" : 2063,
+        "endColumn" : 82
+      }
+    } ],
+    "ir" : [ {
+      "asnName" : "E-RABSetupListCtxtSURes",
+      "javaName" : "ERabSetupList",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 70148,
+        "endOffset" : 70245,
+        "startLine" : 2052,
+        "startColumn" : 29,
+        "endLine" : 2052,
+        "endColumn" : 126
+      },
+      "kind" : "COLLECTION",
+      "bounds" : {
+        "intervals" : [ {
+          "min" : 1,
+          "max" : 256
+        } ],
+        "extensible" : false
+      },
+      "extensible" : false,
+      "representation" : "List<ERabSetupItem>",
+      "fields" : [ ],
+      "items" : [ ],
+      "elementType" : "ERabSetupItem",
+      "alternatives" : [ {
+        "id" : 50,
+        "criticality" : "ignore",
+        "presence" : "mandatory",
+        "javaType" : "ERabSetupItem",
+        "sourceRange" : {
+          "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+          "startOffset" : 70300,
+          "endOffset" : 70401,
+          "startLine" : 2055,
+          "startColumn" : 2,
+          "endLine" : 2055,
+          "endColumn" : 103
+        }
+      } ],
+      "aliases" : [ ],
+      "dependencies" : [ "ERabSetupItem" ],
+      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "overrides" : {
+        "factoryMethod" : "\"erabSetupList\"",
+        "javaClass" : "\"ERabSetupList\"",
+        "protocolIeConstant" : "\"E_RAB_SETUP_LIST_CTXT_SU_RES\"",
+        "source" : "config\\s1ap-overrides.json"
+      }
+    }, {
+      "asnName" : "E-RABSetupItemCtxtSURes",
+      "javaName" : "ERabSetupItem",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 70439,
+        "endOffset" : 70647,
+        "startLine" : 2059,
+        "startColumn" : 29,
+        "endLine" : 2065,
+        "endColumn" : 2
+      },
+      "kind" : "SEQUENCE",
+      "bounds" : null,
+      "extensible" : true,
+      "representation" : "",
+      "fields" : [ {
+        "asnName" : "e-RAB-ID",
+        "javaName" : "eRabId",
+        "javaType" : "ERabId",
+        "optional" : false,
+        "extension" : false,
+        "defaultExpression" : null,
+        "emptyAbsentElementType" : null,
+        "sourceRange" : {
+          "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+          "startOffset" : 70451,
+          "endOffset" : 70473,
+          "startLine" : 2060,
+          "startColumn" : 2,
+          "endLine" : 2060,
+          "endColumn" : 24
+        }
+      }, {
+        "asnName" : "transportLayerAddress",
+        "javaName" : "transportLayerAddress",
+        "javaType" : "TransportLayerAddress",
+        "optional" : false,
+        "extension" : false,
+        "defaultExpression" : null,
+        "emptyAbsentElementType" : null,
+        "sourceRange" : {
+          "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+          "startOffset" : 70476,
+          "endOffset" : 70522,
+          "startLine" : 2061,
+          "startColumn" : 2,
+          "endLine" : 2061,
+          "endColumn" : 48
+        }
+      }, {
+        "asnName" : "gTP-TEID",
+        "javaName" : "gtpTeid",
+        "javaType" : "GtpTeid",
+        "optional" : false,
+        "extension" : false,
+        "defaultExpression" : null,
+        "emptyAbsentElementType" : null,
+        "sourceRange" : {
+          "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+          "startOffset" : 70525,
+          "endOffset" : 70547,
+          "startLine" : 2062,
+          "startColumn" : 2,
+          "endLine" : 2062,
+          "endColumn" : 24
+        }
+      }, {
+        "asnName" : "iE-Extensions",
+        "javaName" : "ieExtensions",
+        "javaType" : "ERabSetupItemIeExtensions",
+        "optional" : true,
+        "extension" : false,
+        "defaultExpression" : null,
+        "emptyAbsentElementType" : null,
+        "sourceRange" : {
+          "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+          "startOffset" : 70550,
+          "endOffset" : 70639,
+          "startLine" : 2063,
+          "startColumn" : 2,
+          "endLine" : 2063,
+          "endColumn" : 91
+        }
+      } ],
+      "items" : [ ],
+      "elementType" : null,
+      "alternatives" : [ ],
+      "aliases" : [ ],
+      "dependencies" : [ "ERabId", "TransportLayerAddress", "GtpTeid", "ERabSetupItemIeExtensions" ],
+      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "overrides" : {
+        "javaClass" : "\"ERabSetupItem\"",
+        "source" : "config\\s1ap-overrides.json"
+      }
+    }, {
+      "asnName" : "E-RAB-ID",
+      "javaName" : "ERabId",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 70465,
+        "endOffset" : 70473,
+        "startLine" : 2060,
+        "startColumn" : 16,
+        "endLine" : 2060,
+        "endColumn" : 24
+      },
+      "kind" : "INTEGER",
+      "bounds" : {
+        "intervals" : [ {
+          "min" : 0,
+          "max" : 15
+        } ],
+        "extensible" : true
+      },
+      "extensible" : true,
+      "representation" : "BigInteger",
+      "fields" : [ ],
+      "items" : [ ],
+      "elementType" : null,
+      "alternatives" : [ ],
+      "aliases" : [ "E-RAB-ID" ],
+      "dependencies" : [ ],
+      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "overrides" : { }
+    }, {
+      "asnName" : "TransportLayerAddress",
+      "javaName" : "TransportLayerAddress",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 70501,
+        "endOffset" : 70522,
+        "startLine" : 2061,
+        "startColumn" : 27,
+        "endLine" : 2061,
+        "endColumn" : 48
+      },
+      "kind" : "BIT_STRING",
+      "bounds" : {
+        "intervals" : [ {
+          "min" : 1,
+          "max" : 160
+        } ],
+        "extensible" : true
+      },
+      "extensible" : true,
+      "representation" : "AsnBitString.Value",
+      "fields" : [ ],
+      "items" : [ ],
+      "elementType" : null,
+      "alternatives" : [ ],
+      "aliases" : [ "TransportLayerAddress" ],
+      "dependencies" : [ ],
+      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "overrides" : { }
+    }, {
+      "asnName" : "GTP-TEID",
+      "javaName" : "GtpTeid",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 70539,
+        "endOffset" : 70547,
+        "startLine" : 2062,
+        "startColumn" : 16,
+        "endLine" : 2062,
+        "endColumn" : 24
+      },
+      "kind" : "OCTET_STRING",
+      "bounds" : {
+        "intervals" : [ {
+          "min" : 4,
+          "max" : 4
+        } ],
+        "extensible" : false
+      },
+      "extensible" : false,
+      "representation" : "byte[]",
+      "fields" : [ ],
+      "items" : [ ],
+      "elementType" : null,
+      "alternatives" : [ ],
+      "aliases" : [ "GTP-TEID" ],
+      "dependencies" : [ ],
+      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "overrides" : { }
+    }, {
+      "asnName" : "ERabSetupItemIeExtensions",
+      "javaName" : "ERabSetupItemIeExtensions",
+      "sourceRange" : {
+        "sourceName" : "C:\\workspace\\asn1resolver2\\s1ap.asn",
+        "startOffset" : 70568,
+        "endOffset" : 70630,
+        "startLine" : 2063,
+        "startColumn" : 20,
+        "endLine" : 2063,
+        "endColumn" : 82
+      },
+      "kind" : "CONTAINER",
+      "bounds" : {
+        "intervals" : [ {
+          "min" : 1,
+          "max" : 65535
+        } ],
+        "extensible" : false
+      },
+      "extensible" : false,
+      "representation" : "multiple",
+      "fields" : [ ],
+      "items" : [ ],
+      "elementType" : null,
+      "alternatives" : [ ],
+      "aliases" : [ "ProtocolExtensionContainer" ],
+      "dependencies" : [ ],
+      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "overrides" : { }
+    } ],
+    "extensionOnlyBuilderSuppressed" : false
+  } ],
+  "files" : [ {
+    "path" : "sources/tel/core/s1ap/spec/ie/EnbName.java",
+    "sha256" : "fa7700acc73c235b86b0e96537157b317ff9b5a86c0ab30ed4fb62782e2ebc8f",
+    "status" : "created",
+    "previousSha256" : "fa7700acc73c235b86b0e96537157b317ff9b5a86c0ab30ed4fb62782e2ebc8f"
+  }, {
+    "path" : "sources/tel/core/s1ap/spec/ie/GlobalEnbId.java",
+    "sha256" : "705be7d7ae75340fc1c737fe0c6a472994fbed6fea569e73161bc9e5adcb7bf3",
+    "status" : "created",
+    "previousSha256" : "705be7d7ae75340fc1c737fe0c6a472994fbed6fea569e73161bc9e5adcb7bf3"
+  }, {
+    "path" : "sources/tel/core/s1ap/spec/ie/ERabSetupList.java",
+    "sha256" : "7113199dba01b35d3734157f4ebc96557f6574cd32a363df394710fea2a129c0",
+    "status" : "created",
+    "previousSha256" : "7113199dba01b35d3734157f4ebc96557f6574cd32a363df394710fea2a129c0"
+  }, {
+    "path" : "sources/tel/core/s1ap/spec/ie/ERabId.java",
+    "sha256" : "822b5a6ce009c7528d6954eb44ecf8034e775b4178c8cf76461a4f0e327af143",
+    "status" : "created",
+    "previousSha256" : "822b5a6ce009c7528d6954eb44ecf8034e775b4178c8cf76461a4f0e327af143"
+  }, {
+    "path" : "sources/tel/core/s1ap/spec/ie/ERabSetupItem.java",
+    "sha256" : "75cd1c124cba52d7f2e62cd02d8b32a65001c1f777fdd5633ad0348b8a139478",
+    "status" : "created",
+    "previousSha256" : "75cd1c124cba52d7f2e62cd02d8b32a65001c1f777fdd5633ad0348b8a139478"
+  }, {
+    "path" : "sources/tel/core/s1ap/spec/ie/ERabSetupItemIeExtensions.java",
+    "sha256" : "33796f6a94313c331aef1767872d2f636869b1b225ae503fa234482bc75e481e",
+    "status" : "created",
+    "previousSha256" : "33796f6a94313c331aef1767872d2f636869b1b225ae503fa234482bc75e481e"
+  }, {
+    "path" : "sources/tel/core/s1ap/spec/ie/EnbId.java",
+    "sha256" : "5fe0beb8af4f51e95cf0d218fc6e5bb8190cb7ad668716c2d3848fe109004084",
+    "status" : "created",
+    "previousSha256" : "5fe0beb8af4f51e95cf0d218fc6e5bb8190cb7ad668716c2d3848fe109004084"
+  }, {
+    "path" : "sources/tel/core/s1ap/spec/ie/EnbIdHomeEnbId.java",
+    "sha256" : "0dcfed154da883f2b38e0463653b93f55a8c0e304ea526a597e7d946bc775267",
+    "status" : "created",
+    "previousSha256" : "0dcfed154da883f2b38e0463653b93f55a8c0e304ea526a597e7d946bc775267"
+  }, {
+    "path" : "sources/tel/core/s1ap/spec/ie/EnbIdLongMacroEnbId.java",
+    "sha256" : "b93c53a975b1721e725375d5bb70226c82c8392097b05cc14ed260e4d03f0eca",
+    "status" : "created",
+    "previousSha256" : "b93c53a975b1721e725375d5bb70226c82c8392097b05cc14ed260e4d03f0eca"
+  }, {
+    "path" : "sources/tel/core/s1ap/spec/ie/EnbIdMacroEnbId.java",
+    "sha256" : "297b8b33e010b503359e89d1451c146a3d603a28dbe8c83648635973a91275b4",
+    "status" : "created",
+    "previousSha256" : "297b8b33e010b503359e89d1451c146a3d603a28dbe8c83648635973a91275b4"
+  }, {
+    "path" : "sources/tel/core/s1ap/spec/ie/EnbIdShortMacroEnbId.java",
+    "sha256" : "988480fb7931dacee6d9cc089259b5114da06daa845f9dcfbe31715569b5da0b",
+    "status" : "created",
+    "previousSha256" : "988480fb7931dacee6d9cc089259b5114da06daa845f9dcfbe31715569b5da0b"
+  }, {
+    "path" : "sources/tel/core/s1ap/spec/ie/GlobalEnbIdIeExtensions.java",
+    "sha256" : "decb4a03045387387da4b0854c21e5570bf937813ff1d97d3874793926e66771",
+    "status" : "created",
+    "previousSha256" : "decb4a03045387387da4b0854c21e5570bf937813ff1d97d3874793926e66771"
+  }, {
+    "path" : "sources/tel/core/s1ap/spec/ie/GtpTeid.java",
+    "sha256" : "d4ea8b9d9d12f9e54d5696763f99a44329cfc3f8ba97c8bf2f30568b6678a9b1",
+    "status" : "created",
+    "previousSha256" : "d4ea8b9d9d12f9e54d5696763f99a44329cfc3f8ba97c8bf2f30568b6678a9b1"
+  }, {
+    "path" : "sources/tel/core/s1ap/spec/ie/PlmnIdentity.java",
+    "sha256" : "eb4381b36532ffb84c2639c866f58358b794fb5525195492d713beac28d21331",
+    "status" : "created",
+    "previousSha256" : "eb4381b36532ffb84c2639c866f58358b794fb5525195492d713beac28d21331"
+  }, {
+    "path" : "sources/tel/core/s1ap/spec/ie/TransportLayerAddress.java",
+    "sha256" : "18828a1f90086f7ae5af8ceff918059ee3e6325e7eae62bdc535155747deed38",
+    "status" : "created",
+    "previousSha256" : "18828a1f90086f7ae5af8ceff918059ee3e6325e7eae62bdc535155747deed38"
+  }, {
+    "path" : "snippets/decoder-registrations.txt",
+    "sha256" : "d388eb2360ca54e4b9bed484f49efd8e3ab6ef057644d07757d81467576f6db3",
+    "status" : "created",
+    "previousSha256" : "d388eb2360ca54e4b9bed484f49efd8e3ab6ef057644d07757d81467576f6db3"
+  }, {
+    "path" : "snippets/InformationElements.methods.txt",
+    "sha256" : "d5d6967602df5814937794a45f7579bd8545147917a8261b9faf9f020dbf3979",
+    "status" : "created",
+    "previousSha256" : "d5d6967602df5814937794a45f7579bd8545147917a8261b9faf9f020dbf3979"
+  }, {
+    "path" : "snippets/MessageBuilder.methods.txt",
+    "sha256" : "e5d4223e7acd1c5ae4f390f44e21ac7af8ad4458605ca61ba49b0770b7ab5e4b",
+    "status" : "created",
+    "previousSha256" : "e5d4223e7acd1c5ae4f390f44e21ac7af8ad4458605ca61ba49b0770b7ab5e4b"
+  } ],
+  "exitCode" : 0
+}

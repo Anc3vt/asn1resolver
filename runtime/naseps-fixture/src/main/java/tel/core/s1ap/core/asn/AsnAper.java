@@ -1,0 +1,345 @@
+package tel.core.s1ap.core.asn;
+
+import tel.core.s1ap.core.error.S1apException;
+import tel.core.s1ap.core.model.InformationElement;
+
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+
+/**
+ * Shared aligned PER operations used by the selective S1AP generator (capability AsnAper-v1).
+ * Existing legacy codec entry points retain their API and encoding behavior.
+ *
+ * <p>See <a href="https://www.itu.int/rec/T-REC-X.691-202102-I/en">ITU-T X.691 (02/2021)</a>,
+ * clauses 11, 13, 16-19, 22, 23 and 30.
+ */
+public final class AsnAper {
+    public static final String CAPABILITY = "AsnAper-v1";
+    private static final BigInteger ZERO = BigInteger.ZERO;
+    private static final BigInteger ONE = BigInteger.ONE;
+    private static final String PRINTABLE = " '()+,-./0123456789:=?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private AsnAper() { }
+
+    /** Closed root set. Null Range denotes an unconstrained value. */
+    public static final class Range {
+        private final List<BigInteger> endpoints;
+        public Range(String intervals) {
+            List<BigInteger> values = new ArrayList<>();
+            for (String interval : intervals.split("\\|")) {
+                String[] pair = interval.split(":");
+                if (pair.length != 2) throw new IllegalArgumentException("Invalid interval");
+                BigInteger min = new BigInteger(pair[0]), max = new BigInteger(pair[1]);
+                if (min.compareTo(max) > 0) throw new IllegalArgumentException("Invalid interval bounds");
+                if (!values.isEmpty() && min.compareTo(values.get(values.size() - 1)) <= 0)
+                    throw new IllegalArgumentException("Intervals must be ordered and disjoint");
+                values.add(min); values.add(max);
+            }
+            endpoints = List.copyOf(values);
+        }
+        public BigInteger min() { return endpoints.get(0); }
+        public BigInteger max() { return endpoints.get(endpoints.size() - 1); }
+        public boolean contains(BigInteger value) {
+            for (int i = 0; i < endpoints.size(); i += 2)
+                if (value.compareTo(endpoints.get(i)) >= 0 && value.compareTo(endpoints.get(i + 1)) <= 0) return true;
+            return false;
+        }
+        public boolean contains(int value) { return contains(BigInteger.valueOf(value)); }
+    }
+
+    public static BigInteger validate(BigInteger value, Range range, boolean extensible, boolean known) {
+        Objects.requireNonNull(value, "value");
+        if (range != null && !range.contains(value) && !(extensible && known))
+            throw new IllegalArgumentException("Value outside supported root constraint: " + value);
+        return value;
+    }
+    public static void size(int size, Range range, boolean extensible, boolean known) {
+        if (size < 0) throw new IllegalArgumentException("Negative length");
+        validate(BigInteger.valueOf(size), range, extensible, known);
+    }
+    public static String printable(String value) {
+        Objects.requireNonNull(value, "value");
+        for (int i = 0; i < value.length(); i++)
+            if (PRINTABLE.indexOf(value.charAt(i)) < 0) throw new IllegalArgumentException("Invalid PrintableString character");
+        return value;
+    }
+    public static AsnBitString.Value bitmap(long value, int width) {
+        if (width < 0 || width > 64 || width < 64 && (value >>> width) != 0)
+            throw new IllegalArgumentException("Bitmap does not fit fixed BIT STRING width");
+        return AsnBitString.Value.fromLong(value, width);
+    }
+    public static S1apException protocol(RuntimeException e) {
+        return e instanceof S1apException s ? s : new S1apException("Invalid APER value: " + e.getMessage());
+    }
+    private static boolean extension(BitInput in, boolean extensible, boolean known) {
+        boolean result = extensible && in.readBit();
+        if (result && !known) throw new S1apException("Extension value rejected by root-only policy");
+        return result;
+    }
+    private static boolean extension(BitOutput out, BigInteger value, Range range, boolean extensible, boolean known) {
+        validate(value, range, extensible, known);
+        boolean result = extensible && range != null && !range.contains(value);
+        if (extensible) out.writeBit(result);
+        return result;
+    }
+    public static void integer(BitOutput out, BigInteger value, Range range, boolean extensible, boolean known) {
+        boolean extension = extension(out, value, range, extensible, known);
+        if (range == null || extension) AsnOctetString.encode(out, value.toByteArray());
+        else constrained(out, value, range.min(), range.max());
+    }
+    public static BigInteger integer(BitInput in, Range range, boolean extensible, boolean known) {
+        boolean extension = extension(in, extensible, known);
+        BigInteger value;
+        if (range == null || extension) {
+            byte[] bytes = AsnOctetString.decode(in);
+            if (bytes.length == 0) throw new S1apException("Empty unconstrained INTEGER");
+            value = new BigInteger(bytes);
+        } else value = constrained(in, range.min(), range.max());
+        if (!extension && range != null && !range.contains(value)) throw new S1apException("INTEGER outside root union");
+        return value;
+    }
+    public static void constrained(BitOutput out, BigInteger value, BigInteger min, BigInteger max) {
+        BigInteger offset = value.subtract(min), range = max.subtract(min);
+        if (range.signum() < 0 || offset.signum() < 0 || offset.compareTo(range) > 0)
+            throw new IllegalArgumentException("Constrained INTEGER out of range");
+        int bits = range.bitLength();
+        if (range.compareTo(BigInteger.valueOf(255)) < 0) writeBig(out, offset, bits);
+        else if (bits <= 16) { out.align(); writeBig(out, offset, bits == 8 ? 8 : 16); }
+        else {
+            int maxOctets = (bits + 7) / 8, octets = Math.max(1, (offset.bitLength() + 7) / 8);
+            constrained(out, BigInteger.valueOf(octets), ONE, BigInteger.valueOf(maxOctets));
+            out.align(); writeBig(out, offset, octets * 8);
+        }
+    }
+    public static BigInteger constrained(BitInput in, BigInteger min, BigInteger max) {
+        BigInteger range = max.subtract(min);
+        if (range.signum() < 0) throw new IllegalArgumentException("Invalid range");
+        int bits = range.bitLength(); BigInteger offset;
+        if (range.compareTo(BigInteger.valueOf(255)) < 0) offset = readBig(in, bits);
+        else if (bits <= 16) { in.align(); offset = readBig(in, bits == 8 ? 8 : 16); }
+        else {
+            int octets = constrained(in, ONE, BigInteger.valueOf((bits + 7) / 8)).intValueExact();
+            in.align(); offset = readBig(in, octets * 8);
+        }
+        if (offset.compareTo(range) > 0) throw new S1apException("Unused constrained INTEGER code");
+        return offset.add(min);
+    }
+    private static void writeBig(BitOutput out, BigInteger value, int bits) {
+        for (int i = bits - 1; i >= 0; i--) out.writeBit(value.testBit(i));
+    }
+    private static BigInteger readBig(BitInput in, int bits) {
+        BigInteger result = ZERO;
+        for (int i = 0; i < bits; i++) result = result.shiftLeft(1).or(in.readBit() ? ONE : ZERO);
+        return result;
+    }
+    public static void normallySmall(BitOutput out, int value) {
+        if (value < 0) throw new IllegalArgumentException("Negative normally-small number");
+        out.writeBit(value >= 64);
+        if (value < 64) out.writeBits(value, 6);
+        else {
+            int octets = Math.max(1, (32 - Integer.numberOfLeadingZeros(value) + 7) / 8);
+            out.align(); out.writeBits(octets, 8); out.writeBits(value, octets * 8);
+        }
+    }
+    public static int normallySmall(BitInput in) {
+        if (!in.readBit()) return in.readBitsInt(6);
+        in.align(); int size = in.readBitsInt(8);
+        if (size < 1 || size > 4) throw new S1apException("Unsupported normally-small length");
+        long value = in.readBits(size * 8);
+        if (value > Integer.MAX_VALUE) throw new S1apException("Normally-small value exceeds Java index");
+        return (int) value;
+    }
+    public static void index(BitOutput out, int index, boolean addition, int roots, boolean extensible, boolean known) {
+        if (addition && (!extensible || !known)) throw new IllegalArgumentException("Extension index is disabled");
+        if (extensible) out.writeBit(addition);
+        if (addition) normallySmall(out, index);
+        else {
+            if (index < 0 || index >= roots) throw new IllegalArgumentException("Invalid root index");
+            constrained(out, BigInteger.valueOf(index), ZERO, BigInteger.valueOf(roots - 1L));
+        }
+    }
+    /** Negative result denotes extension index (-index-1). */
+    public static int index(BitInput in, int roots, boolean extensible, boolean known) {
+        if (extension(in, extensible, known)) return -normallySmall(in) - 1;
+        if (roots < 1) throw new S1apException("No root alternatives");
+        int value = constrained(in, ZERO, BigInteger.valueOf(roots - 1L)).intValueExact();
+        if (value >= roots) throw new S1apException("Unused root index");
+        return value;
+    }
+    public static void octets(BitOutput out, byte[] bytes, Range range, boolean extensible, boolean known) {
+        boolean ext = extension(out, BigInteger.valueOf(bytes.length), range, extensible, known);
+        if (general(range, ext)) { AsnOctetString.encode(out, bytes); return; }
+        int min = range.min().intValueExact(), max = range.max().intValueExact();
+        if (min != max) constrained(out, BigInteger.valueOf(bytes.length), range.min(), range.max());
+        if (bytes.length == 0) return;
+        AsnOctetString.encode(out, bytes, bytes.length, bytes.length, min != max || max > 2);
+    }
+    public static byte[] octets(BitInput in, Range range, boolean extensible, boolean known) {
+        boolean ext = extension(in, extensible, known);
+        byte[] result;
+        if (general(range, ext)) result = AsnOctetString.decode(in);
+        else {
+            int min = range.min().intValueExact(), max = range.max().intValueExact();
+            int length = min == max ? min : constrained(in, range.min(), range.max()).intValueExact();
+            result = length == 0 ? new byte[0] : AsnOctetString.decode(in, length, length, min != max || max > 2);
+        }
+        if (!ext && range != null && !range.contains(result.length)) throw new S1apException("OCTET STRING root size");
+        return result;
+    }
+    public static void bits(BitOutput out, AsnBitString.Value value, Range range, boolean extensible, boolean known) {
+        int size = value.getBitLength();
+        boolean ext = extension(out, BigInteger.valueOf(size), range, extensible, known);
+        if (general(range, ext)) {
+            int offset = 0;
+            do {
+                int chunk = writeLength(out, size - offset);
+                for (int i = 0; i < chunk; i++) out.writeBit(value.bitAt(offset + i));
+                offset += chunk;
+                if (chunk < 16384) break;
+            } while (true);
+        } else {
+            if (!range.min().equals(range.max())) constrained(out, BigInteger.valueOf(size), range.min(), range.max());
+            if (size > 0 && (!range.min().equals(range.max()) || range.max().intValueExact() > 16)) out.align();
+            for (int i = 0; i < size; i++) out.writeBit(value.bitAt(i));
+        }
+    }
+    public static AsnBitString.Value bits(BitInput in, Range range, boolean extensible, boolean known) {
+        boolean ext = extension(in, extensible, known);
+        AsnBitString.Value.Builder b = AsnBitString.Value.builder();
+        if (general(range, ext)) {
+            int part;
+            do { part = readLength(in); int length = Math.abs(part);
+                for (int i = 0; i < length; i++) b.appendBit(in.readBit());
+            } while (part < 0);
+        } else {
+            int length = range.min().equals(range.max()) ? range.min().intValueExact() : constrained(in, range.min(), range.max()).intValueExact();
+            if (length > 0 && (!range.min().equals(range.max()) || range.max().intValueExact() > 16)) in.align();
+            for (int i = 0; i < length; i++) b.appendBit(in.readBit());
+        }
+        AsnBitString.Value result = b.build();
+        if (!ext && range != null && !range.contains(result.getBitLength())) throw new S1apException("BIT STRING root size");
+        return result;
+    }
+    public static void string(BitOutput out, String value, Range range, boolean extensible, boolean known) {
+        printable(value);
+        // PrintableString uses eight-bit direct character values in aligned PER (X.691 30.5).
+        boolean ext = extension(out, BigInteger.valueOf(value.length()), range, extensible, known);
+        if (general(range, ext)) { AsnOctetString.encode(out, value.getBytes(StandardCharsets.US_ASCII)); return; }
+        if (!range.min().equals(range.max())) constrained(out, BigInteger.valueOf(value.length()), range.min(), range.max());
+        if (!value.isEmpty() && (range.max().intValueExact() > 2 || !range.min().equals(range.max()) && range.max().intValueExact() == 2)) out.align();
+        out.writeBytes(value.getBytes(StandardCharsets.US_ASCII));
+    }
+    public static String string(BitInput in, Range range, boolean extensible, boolean known) {
+        boolean ext = extension(in, extensible, known);
+        byte[] bytes;
+        if (general(range, ext)) bytes = AsnOctetString.decode(in);
+        else {
+            int length = constrained(in, range.min(), range.max()).intValueExact();
+            if (length > 0 && (range.max().intValueExact() > 2 || !range.min().equals(range.max()) && range.max().intValueExact() == 2)) in.align();
+            bytes = in.readBytes(length);
+        }
+        if (!ext && range != null && !range.contains(bytes.length)) throw new S1apException("PrintableString root size");
+        return printable(new String(bytes, StandardCharsets.US_ASCII));
+    }
+    private static boolean general(Range range, boolean extension) {
+        return extension || range == null || range.max().compareTo(BigInteger.valueOf(65536)) >= 0;
+    }
+    /** Returns emitted fragment size; caller emits a final zero determinant after an exact fragment. */
+    private static int writeLength(BitOutput out, int length) {
+        out.align();
+        if (length >= 16384) { int units = Math.min(4, length / 16384); out.writeBits(0xc0 | units, 8); return units * 16384; }
+        out.writeBits(length < 128 ? length : 0x8000 | length, length < 128 ? 8 : 16);
+        return length;
+    }
+    /** Negative length indicates a fragment that must be followed by another determinant. */
+    private static int readLength(BitInput in) {
+        in.align(); int first = in.readBitsInt(8);
+        if ((first & 0x80) == 0) return first;
+        if ((first & 0x40) == 0) return ((first & 0x3f) << 8) | in.readBitsInt(8);
+        int units = first & 0x3f;
+        if (units < 1 || units > 4) throw new S1apException("Invalid PER fragment determinant");
+        return -units * 16384;
+    }
+    public static <T> List<T> list(BitInput in, Range range, boolean extensible, boolean known, Function<BitInput, T> reader) {
+        boolean ext = extension(in, extensible, known); List<T> values = new ArrayList<>();
+        int part;
+        do {
+            part = general(range, ext) ? readLength(in) : constrained(in, range.min(), range.max()).intValueExact();
+            for (int i = 0; i < Math.abs(part); i++) values.add(reader.apply(in));
+        } while (part < 0);
+        if (!ext && range != null && !range.contains(values.size())) throw new S1apException("List root size");
+        return List.copyOf(values);
+    }
+    public static <T> void list(BitOutput out, List<T> values, Range range, boolean extensible, boolean known, BiConsumer<BitOutput, T> writer) {
+        boolean ext = extension(out, BigInteger.valueOf(values.size()), range, extensible, known); int offset = 0;
+        do {
+            int count;
+            if (general(range, ext)) count = writeLength(out, values.size() - offset);
+            else { count = values.size(); constrained(out, BigInteger.valueOf(count), range.min(), range.max()); }
+            for (int i = 0; i < count; i++) writer.accept(out, values.get(offset + i));
+            offset += count;
+            if (!general(range, ext) || count < 16384) break;
+        } while (true);
+    }
+    public static BitInput open(BitInput in) { return new BitInput(AsnOpenType.decode(in)); }
+    public static void open(BitOutput out, InformationElement value) {
+        BitOutput content = new BitOutput(); value.encode(content); byte[] bytes = content.toByteArray();
+        AsnOpenType.encode(out, bytes.length == 0 ? new byte[1] : bytes);
+    }
+    public static void finishOpen(BitInput in) {
+        int remaining = in.getSourceData().length * 8 - in.getBytePos() * 8 - in.getBitPos();
+        if (remaining > 7 && !(remaining == 8 && in.getBytePos() == 0 && in.getBitPos() == 0))
+            throw new S1apException("Trailing open type data");
+        while (remaining-- > 0) if (in.readBit()) throw new S1apException("Nonzero open type padding");
+    }
+    public static <T> T openValue(BitInput in, Function<BitInput, T> reader) {
+        BitInput content = open(in); T value = reader.apply(content); finishOpen(content); return value;
+    }
+    public static BitInput[] extensions(BitInput in, int knownCount) {
+        int count = in.readBit() ? readLength(in) : in.readBitsInt(6) + 1;
+        if (count < 1 || count > 65536) throw new S1apException("Extension bitmap too large");
+        boolean[] present = new boolean[count];
+        boolean any = false;
+        for (int i = 0; i < count; i++) { present[i] = in.readBit(); any |= present[i]; }
+        if (!any) throw new S1apException("Extension-present bit with no present additions");
+        BitInput[] values = new BitInput[knownCount];
+        for (int i = 0; i < count; i++) if (present[i]) {
+            if (i >= knownCount) throw new S1apException("Unknown extension addition");
+            values[i] = open(in);
+        }
+        return values;
+    }
+    public static void extensions(BitOutput out, InformationElement... values) {
+        if (values.length == 0) throw new IllegalArgumentException("Empty extension bitmap");
+        if (values.length <= 64) { out.writeBit(false); out.writeBits(values.length - 1, 6); }
+        else {
+            if (values.length >= 16384) throw new IllegalArgumentException("Extension bitmap fragmentation is unsupported");
+            out.writeBit(true); writeLength(out, values.length);
+        }
+        for (InformationElement value : values) out.writeBit(value != null);
+        for (InformationElement value : values) if (value != null) open(out, value);
+    }
+    public record Field(int id, int criticality, InformationElement value) {
+        public Field {
+            if (id < 0 || id > 65535 || criticality < 0 || criticality > 2) throw new IllegalArgumentException("Invalid protocol field");
+            Objects.requireNonNull(value, "value");
+        }
+    }
+    public static Field field(BitInput in, int[] ids, int[] criticalities, List<Function<BitInput, ? extends InformationElement>> readers) {
+        int id = constrained(in, ZERO, BigInteger.valueOf(65535)).intValueExact();
+        int criticality = index(in, 3, false, false);
+        for (int i = 0; i < ids.length; i++) if (ids[i] == id) {
+            if (criticalities[i] != criticality) throw new S1apException("Unexpected criticality for ID " + id);
+            return new Field(id, criticality, openValue(in, readers.get(i)));
+        }
+        throw new S1apException("Unknown protocol field ID " + id);
+    }
+    public static void field(BitOutput out, Field field) {
+        constrained(out, BigInteger.valueOf(field.id()), ZERO, BigInteger.valueOf(65535));
+        index(out, field.criticality(), false, 3, false, false); open(out, field.value());
+    }
+}

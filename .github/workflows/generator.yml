@@ -1,0 +1,16 @@
+name: S1AP generator
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Parser, full-schema generation, Java compilation, golden and APER vectors
+        run: mvn --batch-mode -Pgenerator clean verify -Dnaseps.sourceRoot=runtime/naseps-fixture/src/main/java

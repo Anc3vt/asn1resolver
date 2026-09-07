@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "types": {
+    "PLMNidentity": { "javaClass": "PlmnIdentity", "existing": true, "representation": "custom", "template": "plmn-identity" },
+    "GTP-TEID": { "javaClass": "GtpTeid", "existing": true, "representation": "custom", "template": "gtp-teid" },
+    "TransportLayerAddress": { "javaClass": "TransportLayerAddress", "existing": true, "representation": "custom", "template": "transport-address" },
+    "NAS-PDU": { "javaClass": "NasPdu", "existing": true, "representation": "custom", "template": "nas-pdu" }
+  },
+  "ies": {
+    "59": { "javaClass": "GlobalEnbId", "existing": true, "choiceStrategy": "custom" },
+    "137": { "javaClass": "DefaultPagingDrx", "factoryMethod": "defaultPagingDrx" }
+  },
+  "constructors": {
+    "GlobalEnbId": {
+      "expose": [{ "parameters": [
+        { "type": "int", "name": "mcc" },
+        { "type": "int", "name": "mnc" },
+        { "type": "GlobalEnbId.EnbIdType", "name": "enbIdType" },
+        { "type": "long", "name": "enbId" }
+      ] }]
+    }
+  }
+}

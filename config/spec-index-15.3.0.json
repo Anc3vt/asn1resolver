@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "spec": {
+    "organization": "ETSI",
+    "number": "TS 136 413",
+    "version": "15.3.0",
+    "release": 15,
+    "url": "https://www.etsi.org/deliver/etsi_ts/136400_136499/136413/15.03.00_60/ts_136413v150300p.pdf",
+    "asnSha256": "e716350a28fe5d5a7bdfdbbc9c8c216924869ca41b489be3dc2ef88e072efabf"
+  },
+  "sections": {
+    "s1-setup-request": { "number": "9.1.8.4", "title": "S1 SETUP REQUEST" },
+    "initial-context-setup-response": { "number": "9.1.4.3", "title": "INITIAL CONTEXT SETUP RESPONSE" },
+    "global-enb-id": { "number": "9.2.1.37", "title": "Global eNB ID" },
+    "handover-restriction-list": { "number": "9.2.1.22", "title": "Handover Restriction List" }
+  },
+  "types": {
+    "Global-ENB-ID": { "refs": ["global-enb-id"] },
+    "HandoverRestrictionList": { "refs": ["handover-restriction-list"] }
+  },
+  "ies": {
+    "60": { "refs": ["s1-setup-request"] },
+    "51": { "refs": ["initial-context-setup-response"] }
+  },
+  "x691": {
+    "version": "2021-02",
+    "url": "https://www.itu.int/rec/T-REC-X.691-202102-I/en",
+    "clauses": {
+      "INTEGER": "13", "ENUMERATED": "14", "BIT_STRING": "16", "OCTET_STRING": "17",
+      "SEQUENCE": "19", "COLLECTION": "20", "CHOICE": "23", "PRINTABLE_STRING": "30"
+    }
+  }
+}

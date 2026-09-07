@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:asn1resolver2:s1ap-generation-report:1",
+  "title": "S1AP selective IE generator report v1",
+  "type": "object",
+  "required": ["reportSchemaVersion", "generatorVersion", "diagnostics", "exitCode"],
+  "properties": {
+    "reportSchemaVersion": { "const": 1 },
+    "generatorVersion": { "type": "string" },
+    "command": { "enum": ["list", "describe", "validate", "generate"] },
+    "exitCode": { "type": "integer", "enum": [0, 2, 3, 4, 5, 6, 7, 8, 9] },
+    "asn": {
+      "type": "object", "required": ["path", "sha256", "version", "modules", "assignments", "errors"],
+      "properties": { "path": { "type": "string" }, "sha256": { "$ref": "#/$defs/hash" }, "version": { "type": ["string", "null"] } }
+    },
+    "diagnostics": { "type": "array", "items": { "$ref": "#/$defs/diagnostic" } },
+    "selectors": { "type": "array", "items": {
+      "type": "object", "required": ["selector", "resolutionMethod", "id", "idAssignment", "asnType", "javaClass", "usages"],
+      "properties": { "id": { "type": "integer", "minimum": 0, "maximum": 65535 }, "dependencies": { "type": "array" }, "ir": { "type": "array" } }
+    } },
+    "files": { "type": "array", "items": {
+      "type": "object", "required": ["path", "sha256", "status"],
+      "properties": {
+        "path": { "type": "string" }, "sha256": { "$ref": "#/$defs/hash" }, "previousSha256": { "$ref": "#/$defs/hash" },
+        "status": { "enum": ["planned", "created", "skipped", "conflicting"] }
+      }
+    } }
+  },
+  "$defs": {
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "diagnostic": {
+      "type": "object", "required": ["code", "severity", "message", "selector", "sourceRange", "relatedSourceRanges", "suggestedAction"],
+      "properties": {
+        "code": { "type": "string" }, "severity": { "enum": ["WARNING", "ERROR"] }, "message": { "type": "string" },
+        "selector": { "type": ["string", "null"] }, "sourceRange": { "type": ["object", "null"] },
+        "relatedSourceRanges": { "type": "array" }, "suggestedAction": { "type": "string" }
+      }
+    }
+  }
+}
