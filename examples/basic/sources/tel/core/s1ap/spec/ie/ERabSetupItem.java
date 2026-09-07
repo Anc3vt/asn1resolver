@@ -3,7 +3,6 @@
 package tel.core.s1ap.spec.ie;
 
 import java.util.Objects;
-import tel.core.s1ap.core.asn.AsnAper;
 import tel.core.s1ap.core.asn.BitInput;
 import tel.core.s1ap.core.asn.BitOutput;
 import tel.core.s1ap.core.error.S1apException;
@@ -24,7 +23,7 @@ public final class ERabSetupItem implements InformationElement {
             this.gtpTeid = new GtpTeid(in);
             this.ieExtensions = hasIeExtensions ? new ERabSetupItemIeExtensions(in) : null;
         } catch (RuntimeException e) {
-            throw AsnAper.protocol(e);
+            throw aperProtocol(e);
         }
     }
 
@@ -60,6 +59,11 @@ public final class ERabSetupItem implements InformationElement {
 
     @Override
     public String toString() {
-        return "ERabSetupItem{" + '}';
+        return getClass().getSimpleName() + "{" + '}';
     }
+
+    private static S1apException aperProtocol(RuntimeException e) {
+        return e instanceof S1apException s ? s : new S1apException("Invalid APER value: " + e.getMessage());
+    }
+
 }

@@ -7,14 +7,6 @@ public final class AsnPrintableString {
     private AsnPrintableString() {
     }
 
-    public static void encodeAper(BitOutput out, String value, AsnAper.Range range, boolean extensible, boolean known) {
-        AsnAper.string(out, value, range, extensible, known);
-    }
-
-    public static String decodeAper(BitInput in, AsnAper.Range range, boolean extensible, boolean known) {
-        return AsnAper.string(in, range, extensible, known);
-    }
-
     public static void encode(BitOutput out, String string, int minSize, int maxSize) {
         byte[] bytes = string.getBytes(StandardCharsets.US_ASCII);
         out.writeBit(false);

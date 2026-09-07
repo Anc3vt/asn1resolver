@@ -139,7 +139,7 @@ public final class TypeNormalizer {
                     dependencies.add(element); representation = "List<" + element + ">";
                     types.put(javaName, new GenType(asnName, javaName, source.getSourceRange(), kind, bounds, extensible,
                             representation, fields, items, element, child.alternatives(), aliases, List.of(element),
-                            List.of("AsnAper-v1"), provenance(config)));
+                            List.of("inline-aper"), provenance(config)));
                     return javaName;
                 }
             } else throw error("UNSUPPORTED_ASN_TYPE", type, type.getClass().getSimpleName());
@@ -163,7 +163,7 @@ public final class TypeNormalizer {
             checkUnique(items.stream().map(GenType.Item::javaName).toList(), type);
             types.put(javaName, new GenType(asnName, javaName, source.getSourceRange(), kind, bounds, extensible,
                     representation, fields, items, element, List.of(), aliases, dependencies.stream().distinct().toList(),
-                    List.of("AsnAper-v1"), provenance(config)));
+                    List.of("inline-aper"), provenance(config)));
             return javaName;
         } finally { stack.removeLast(); }
     }
@@ -184,7 +184,7 @@ public final class TypeNormalizer {
             String element = alternatives.get(0).javaType();
             return new GenType(asn, java, ref.getSourceRange(), GenType.Kind.COLLECTION,
                     new Bounds(List.of(new Bounds.Interval(min, max)), false), false, "List<" + element + ">",
-                    List.of(), List.of(), element, alternatives, aliases, List.of(element), List.of("AsnAper-v1"), provenance(config));
+                    List.of(), List.of(), element, alternatives, aliases, List.of(element), List.of("inline-aper"), provenance(config));
         }
         if (!Set.of("ProtocolIE-Container", "ProtocolIE-SingleContainer", "ProtocolExtensionContainer").contains(ref.getName()))
             throw error("UNSUPPORTED_ASN_TYPE", ref, "Parameterized type " + ref.getName());
@@ -196,7 +196,7 @@ public final class TypeNormalizer {
         return new GenType(asn, java, ref.getSourceRange(), GenType.Kind.CONTAINER,
                 single ? null : new Bounds(List.of(new Bounds.Interval(BigInteger.valueOf(ref.getName().equals("ProtocolIE-Container") ? 0 : 1), BigInteger.valueOf(65535))), false),
                 false, single ? "single" : "multiple", List.of(), List.of(), null, alternatives, aliases,
-                alternatives.stream().map(GenType.OpenAlternative::javaType).distinct().toList(), List.of("AsnAper-v1"), provenance(config));
+                alternatives.stream().map(GenType.OpenAlternative::javaType).distinct().toList(), List.of("inline-aper"), provenance(config));
     }
     private BigInteger parameterInteger(ActualParameter parameter) {
         if (parameter.getReferences().size() == 1 && parameter.getReferences().get(0).getTarget() instanceof ValueAssignment v)

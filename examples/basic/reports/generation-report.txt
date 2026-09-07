@@ -14,15 +14,15 @@ S1AP IE generation report v1
     "errors" : 0
   },
   "configHashes" : {
-    "docsIndex" : "4058766b2435ade414b74dd0329e0d7a5c20b73f2a99c20d4c6c4b2bed58a600",
+    "docsIndex" : "39c4c5990e9aa3c3db63fad2e5d474b39af1e5b94e869b03ab8f63646564d479",
     "overrides" : "5ce44e616498a78c59f9c506dca30125959b1f0cac39aa41ae0b17100bff3855"
   },
   "catalog" : {
     "declared" : 279,
     "mapped" : 271
   },
-  "runtimeCapabilities" : [ "AsnAper-v1" ],
-  "runtimeValidation" : "Bundled prerequisite required; no target supplied",
+  "runtimeCapabilities" : [ "inline-aper" ],
+  "runtimeValidation" : "Private APER helpers emitted in IE classes; no target supplied",
   "extensionPolicy" : "root-only",
   "dependencyPolicy" : "closure",
   "selectors" : [ {
@@ -109,13 +109,13 @@ S1AP IE generation report v1
       "alternatives" : [ ],
       "aliases" : [ ],
       "dependencies" : [ ],
-      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "requiredCapabilities" : [ "inline-aper" ],
       "overrides" : { }
     } ],
     "extensionOnlyBuilderSuppressed" : false
   }, {
-    "selector" : "Global-ENB-ID",
-    "resolutionMethod" : "ASN type",
+    "selector" : "59",
+    "resolutionMethod" : "numeric ID",
     "id" : 59,
     "idAssignment" : "id-Global-ENB-ID",
     "asnType" : "Global-ENB-ID",
@@ -341,7 +341,7 @@ S1AP IE generation report v1
       "alternatives" : [ ],
       "aliases" : [ ],
       "dependencies" : [ "PlmnIdentity", "EnbId", "GlobalEnbIdIeExtensions" ],
-      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "requiredCapabilities" : [ "inline-aper" ],
       "overrides" : { }
     }, {
       "asnName" : "PLMNidentity",
@@ -371,7 +371,7 @@ S1AP IE generation report v1
       "alternatives" : [ ],
       "aliases" : [ "PLMNidentity", "TBCD-STRING" ],
       "dependencies" : [ ],
-      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "requiredCapabilities" : [ "inline-aper" ],
       "overrides" : {
         "javaClass" : "\"PlmnIdentity\"",
         "source" : "config\\s1ap-overrides.json"
@@ -466,7 +466,7 @@ S1AP IE generation report v1
       "alternatives" : [ ],
       "aliases" : [ "ENB-ID" ],
       "dependencies" : [ "EnbIdMacroEnbId", "EnbIdHomeEnbId", "EnbIdShortMacroEnbId", "EnbIdLongMacroEnbId" ],
-      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "requiredCapabilities" : [ "inline-aper" ],
       "overrides" : { }
     }, {
       "asnName" : "EnbIdMacroEnbId",
@@ -496,7 +496,7 @@ S1AP IE generation report v1
       "alternatives" : [ ],
       "aliases" : [ ],
       "dependencies" : [ ],
-      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "requiredCapabilities" : [ "inline-aper" ],
       "overrides" : { }
     }, {
       "asnName" : "EnbIdHomeEnbId",
@@ -526,7 +526,7 @@ S1AP IE generation report v1
       "alternatives" : [ ],
       "aliases" : [ ],
       "dependencies" : [ ],
-      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "requiredCapabilities" : [ "inline-aper" ],
       "overrides" : { }
     }, {
       "asnName" : "EnbIdShortMacroEnbId",
@@ -556,7 +556,7 @@ S1AP IE generation report v1
       "alternatives" : [ ],
       "aliases" : [ ],
       "dependencies" : [ ],
-      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "requiredCapabilities" : [ "inline-aper" ],
       "overrides" : { }
     }, {
       "asnName" : "EnbIdLongMacroEnbId",
@@ -586,7 +586,7 @@ S1AP IE generation report v1
       "alternatives" : [ ],
       "aliases" : [ ],
       "dependencies" : [ ],
-      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "requiredCapabilities" : [ "inline-aper" ],
       "overrides" : { }
     }, {
       "asnName" : "GlobalEnbIdIeExtensions",
@@ -616,7 +616,7 @@ S1AP IE generation report v1
       "alternatives" : [ ],
       "aliases" : [ "ProtocolExtensionContainer" ],
       "dependencies" : [ ],
-      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "requiredCapabilities" : [ "inline-aper" ],
       "overrides" : { }
     } ],
     "extensionOnlyBuilderSuppressed" : false
@@ -767,7 +767,7 @@ S1AP IE generation report v1
       } ],
       "aliases" : [ ],
       "dependencies" : [ "ERabSetupItem" ],
-      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "requiredCapabilities" : [ "inline-aper" ],
       "overrides" : {
         "factoryMethod" : "\"erabSetupList\"",
         "javaClass" : "\"ERabSetupList\"",
@@ -864,7 +864,7 @@ S1AP IE generation report v1
       "alternatives" : [ ],
       "aliases" : [ ],
       "dependencies" : [ "ERabId", "TransportLayerAddress", "GtpTeid", "ERabSetupItemIeExtensions" ],
-      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "requiredCapabilities" : [ "inline-aper" ],
       "overrides" : {
         "javaClass" : "\"ERabSetupItem\"",
         "source" : "config\\s1ap-overrides.json"
@@ -897,7 +897,7 @@ S1AP IE generation report v1
       "alternatives" : [ ],
       "aliases" : [ "E-RAB-ID" ],
       "dependencies" : [ ],
-      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "requiredCapabilities" : [ "inline-aper" ],
       "overrides" : { }
     }, {
       "asnName" : "TransportLayerAddress",
@@ -927,7 +927,7 @@ S1AP IE generation report v1
       "alternatives" : [ ],
       "aliases" : [ "TransportLayerAddress" ],
       "dependencies" : [ ],
-      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "requiredCapabilities" : [ "inline-aper" ],
       "overrides" : { }
     }, {
       "asnName" : "GTP-TEID",
@@ -957,7 +957,7 @@ S1AP IE generation report v1
       "alternatives" : [ ],
       "aliases" : [ "GTP-TEID" ],
       "dependencies" : [ ],
-      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "requiredCapabilities" : [ "inline-aper" ],
       "overrides" : { }
     }, {
       "asnName" : "ERabSetupItemIeExtensions",
@@ -987,86 +987,86 @@ S1AP IE generation report v1
       "alternatives" : [ ],
       "aliases" : [ "ProtocolExtensionContainer" ],
       "dependencies" : [ ],
-      "requiredCapabilities" : [ "AsnAper-v1" ],
+      "requiredCapabilities" : [ "inline-aper" ],
       "overrides" : { }
     } ],
     "extensionOnlyBuilderSuppressed" : false
   } ],
   "files" : [ {
     "path" : "sources/tel/core/s1ap/spec/ie/EnbName.java",
-    "sha256" : "fa7700acc73c235b86b0e96537157b317ff9b5a86c0ab30ed4fb62782e2ebc8f",
+    "sha256" : "d9e55b088a4244d9593103503f8c908fb126e84b7b4d5bc69ee7b77c06bf495b",
     "status" : "created",
-    "previousSha256" : "fa7700acc73c235b86b0e96537157b317ff9b5a86c0ab30ed4fb62782e2ebc8f"
+    "previousSha256" : "d9e55b088a4244d9593103503f8c908fb126e84b7b4d5bc69ee7b77c06bf495b"
   }, {
     "path" : "sources/tel/core/s1ap/spec/ie/GlobalEnbId.java",
-    "sha256" : "705be7d7ae75340fc1c737fe0c6a472994fbed6fea569e73161bc9e5adcb7bf3",
+    "sha256" : "254fdcd49b540e4bbc842cc4d88bf7ee1acd1e6e6a0274ea2eb05cc9385e92b7",
     "status" : "created",
-    "previousSha256" : "705be7d7ae75340fc1c737fe0c6a472994fbed6fea569e73161bc9e5adcb7bf3"
+    "previousSha256" : "254fdcd49b540e4bbc842cc4d88bf7ee1acd1e6e6a0274ea2eb05cc9385e92b7"
   }, {
     "path" : "sources/tel/core/s1ap/spec/ie/ERabSetupList.java",
-    "sha256" : "7113199dba01b35d3734157f4ebc96557f6574cd32a363df394710fea2a129c0",
+    "sha256" : "414f1dd86ad92d1e2823cddd7f0ba8605b20e020304dbaf71b97b4c6830de1ed",
     "status" : "created",
-    "previousSha256" : "7113199dba01b35d3734157f4ebc96557f6574cd32a363df394710fea2a129c0"
+    "previousSha256" : "414f1dd86ad92d1e2823cddd7f0ba8605b20e020304dbaf71b97b4c6830de1ed"
   }, {
     "path" : "sources/tel/core/s1ap/spec/ie/ERabId.java",
-    "sha256" : "822b5a6ce009c7528d6954eb44ecf8034e775b4178c8cf76461a4f0e327af143",
+    "sha256" : "b53ada89e539d43562210873929130620439cde416ac442fec53a0cd5f430f20",
     "status" : "created",
-    "previousSha256" : "822b5a6ce009c7528d6954eb44ecf8034e775b4178c8cf76461a4f0e327af143"
+    "previousSha256" : "b53ada89e539d43562210873929130620439cde416ac442fec53a0cd5f430f20"
   }, {
     "path" : "sources/tel/core/s1ap/spec/ie/ERabSetupItem.java",
-    "sha256" : "75cd1c124cba52d7f2e62cd02d8b32a65001c1f777fdd5633ad0348b8a139478",
+    "sha256" : "c4886ffb16a5f12834f90a006c10ae2266503d2cc76f58a2197c5e8bc0e08e3f",
     "status" : "created",
-    "previousSha256" : "75cd1c124cba52d7f2e62cd02d8b32a65001c1f777fdd5633ad0348b8a139478"
+    "previousSha256" : "c4886ffb16a5f12834f90a006c10ae2266503d2cc76f58a2197c5e8bc0e08e3f"
   }, {
     "path" : "sources/tel/core/s1ap/spec/ie/ERabSetupItemIeExtensions.java",
-    "sha256" : "33796f6a94313c331aef1767872d2f636869b1b225ae503fa234482bc75e481e",
+    "sha256" : "9de17854451139cb6e1cdc5f40002ac1b71f06e98ebd62029df5a0affa56d035",
     "status" : "created",
-    "previousSha256" : "33796f6a94313c331aef1767872d2f636869b1b225ae503fa234482bc75e481e"
+    "previousSha256" : "9de17854451139cb6e1cdc5f40002ac1b71f06e98ebd62029df5a0affa56d035"
   }, {
     "path" : "sources/tel/core/s1ap/spec/ie/EnbId.java",
-    "sha256" : "5fe0beb8af4f51e95cf0d218fc6e5bb8190cb7ad668716c2d3848fe109004084",
+    "sha256" : "b83abd17d291dc7ec427378870080eb5945225a93b4be8b9da04db1112c55dbb",
     "status" : "created",
-    "previousSha256" : "5fe0beb8af4f51e95cf0d218fc6e5bb8190cb7ad668716c2d3848fe109004084"
+    "previousSha256" : "b83abd17d291dc7ec427378870080eb5945225a93b4be8b9da04db1112c55dbb"
   }, {
     "path" : "sources/tel/core/s1ap/spec/ie/EnbIdHomeEnbId.java",
-    "sha256" : "0dcfed154da883f2b38e0463653b93f55a8c0e304ea526a597e7d946bc775267",
+    "sha256" : "fdb13d307f17c0bb66b21b298c3b98b03216916a2cc1861583b3b53c7d9c86a6",
     "status" : "created",
-    "previousSha256" : "0dcfed154da883f2b38e0463653b93f55a8c0e304ea526a597e7d946bc775267"
+    "previousSha256" : "fdb13d307f17c0bb66b21b298c3b98b03216916a2cc1861583b3b53c7d9c86a6"
   }, {
     "path" : "sources/tel/core/s1ap/spec/ie/EnbIdLongMacroEnbId.java",
-    "sha256" : "b93c53a975b1721e725375d5bb70226c82c8392097b05cc14ed260e4d03f0eca",
+    "sha256" : "fb90173d55a0249d34b8400c639ed2e09066cc32028e6b470aaab16bbad8611b",
     "status" : "created",
-    "previousSha256" : "b93c53a975b1721e725375d5bb70226c82c8392097b05cc14ed260e4d03f0eca"
+    "previousSha256" : "fb90173d55a0249d34b8400c639ed2e09066cc32028e6b470aaab16bbad8611b"
   }, {
     "path" : "sources/tel/core/s1ap/spec/ie/EnbIdMacroEnbId.java",
-    "sha256" : "297b8b33e010b503359e89d1451c146a3d603a28dbe8c83648635973a91275b4",
+    "sha256" : "52d80b0fda654c70fc960ec6f400cd5e85a8b616707f4553dfa7c5e38e75d47b",
     "status" : "created",
-    "previousSha256" : "297b8b33e010b503359e89d1451c146a3d603a28dbe8c83648635973a91275b4"
+    "previousSha256" : "52d80b0fda654c70fc960ec6f400cd5e85a8b616707f4553dfa7c5e38e75d47b"
   }, {
     "path" : "sources/tel/core/s1ap/spec/ie/EnbIdShortMacroEnbId.java",
-    "sha256" : "988480fb7931dacee6d9cc089259b5114da06daa845f9dcfbe31715569b5da0b",
+    "sha256" : "9a0585aec7db9296db79cdc370439a54ebd45e73eec28f54c7702ec99932a56e",
     "status" : "created",
-    "previousSha256" : "988480fb7931dacee6d9cc089259b5114da06daa845f9dcfbe31715569b5da0b"
+    "previousSha256" : "9a0585aec7db9296db79cdc370439a54ebd45e73eec28f54c7702ec99932a56e"
   }, {
     "path" : "sources/tel/core/s1ap/spec/ie/GlobalEnbIdIeExtensions.java",
-    "sha256" : "decb4a03045387387da4b0854c21e5570bf937813ff1d97d3874793926e66771",
+    "sha256" : "ad7f8bfe4bc1adb537d3a600fe5da77991ce18c99c28bafa7092f13cebde1ccd",
     "status" : "created",
-    "previousSha256" : "decb4a03045387387da4b0854c21e5570bf937813ff1d97d3874793926e66771"
+    "previousSha256" : "ad7f8bfe4bc1adb537d3a600fe5da77991ce18c99c28bafa7092f13cebde1ccd"
   }, {
     "path" : "sources/tel/core/s1ap/spec/ie/GtpTeid.java",
-    "sha256" : "d4ea8b9d9d12f9e54d5696763f99a44329cfc3f8ba97c8bf2f30568b6678a9b1",
+    "sha256" : "d986100cf3ca475a059364e083365393e7277ea6ea6e19ee23d5fda4203fe976",
     "status" : "created",
-    "previousSha256" : "d4ea8b9d9d12f9e54d5696763f99a44329cfc3f8ba97c8bf2f30568b6678a9b1"
+    "previousSha256" : "d986100cf3ca475a059364e083365393e7277ea6ea6e19ee23d5fda4203fe976"
   }, {
     "path" : "sources/tel/core/s1ap/spec/ie/PlmnIdentity.java",
-    "sha256" : "eb4381b36532ffb84c2639c866f58358b794fb5525195492d713beac28d21331",
+    "sha256" : "a23e4df933a6927f501c45b4e13df4b9f89db20ba279e4aa013f41ecf6c7e538",
     "status" : "created",
-    "previousSha256" : "eb4381b36532ffb84c2639c866f58358b794fb5525195492d713beac28d21331"
+    "previousSha256" : "a23e4df933a6927f501c45b4e13df4b9f89db20ba279e4aa013f41ecf6c7e538"
   }, {
     "path" : "sources/tel/core/s1ap/spec/ie/TransportLayerAddress.java",
-    "sha256" : "18828a1f90086f7ae5af8ceff918059ee3e6325e7eae62bdc535155747deed38",
+    "sha256" : "60d8c4fac6b7c745a86c47252407ba3db356735dd9bee1c74c04b63cc6df4bfc",
     "status" : "created",
-    "previousSha256" : "18828a1f90086f7ae5af8ceff918059ee3e6325e7eae62bdc535155747deed38"
+    "previousSha256" : "60d8c4fac6b7c745a86c47252407ba3db356735dd9bee1c74c04b63cc6df4bfc"
   }, {
     "path" : "snippets/decoder-registrations.txt",
     "sha256" : "d388eb2360ca54e4b9bed484f49efd8e3ab6ef057644d07757d81467576f6db3",
@@ -1074,14 +1074,14 @@ S1AP IE generation report v1
     "previousSha256" : "d388eb2360ca54e4b9bed484f49efd8e3ab6ef057644d07757d81467576f6db3"
   }, {
     "path" : "snippets/InformationElements.methods.txt",
-    "sha256" : "d5d6967602df5814937794a45f7579bd8545147917a8261b9faf9f020dbf3979",
+    "sha256" : "1c3165796dc851aa28e20524a542d4f96aeb286335891a9a7bd96c211d6a4633",
     "status" : "created",
-    "previousSha256" : "d5d6967602df5814937794a45f7579bd8545147917a8261b9faf9f020dbf3979"
+    "previousSha256" : "1c3165796dc851aa28e20524a542d4f96aeb286335891a9a7bd96c211d6a4633"
   }, {
     "path" : "snippets/MessageBuilder.methods.txt",
-    "sha256" : "e5d4223e7acd1c5ae4f390f44e21ac7af8ad4458605ca61ba49b0770b7ab5e4b",
+    "sha256" : "8f6e45cb653574539d802f731d14880d4d814ccba86f4edf06da9b4b820ac328",
     "status" : "created",
-    "previousSha256" : "e5d4223e7acd1c5ae4f390f44e21ac7af8ad4458605ca61ba49b0770b7ab5e4b"
+    "previousSha256" : "8f6e45cb653574539d802f731d14880d4d814ccba86f4edf06da9b4b820ac328"
   } ],
   "exitCode" : 0
 }

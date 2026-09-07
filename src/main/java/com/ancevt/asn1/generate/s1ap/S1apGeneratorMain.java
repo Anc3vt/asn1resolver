@@ -71,13 +71,11 @@ public final class S1apGeneratorMain {
             } else if (options.command().equals("validate")) out.println("Valid ASN.1: " + document.getModules().size() + " modules, " + catalog.descriptors().size() + " IDs; version=" + version + "; SHA-256=" + hash);
             else {
                 TargetSources target = options.target() == null ? null : new TargetSources(options.target());
-                if (target != null && !target.runtime() && options.command().equals("generate"))
-                    throw new GenerationException("MISSING_RUNTIME_CAPABILITY", 6, "Target requires AsnAper-v1 prerequisite; see runtime/README.md");
                 Map<String, Integer> constants = new TreeMap<>();
                 if (target != null) constants.putAll(target.constants());
                 else resource("protocol-ie-constants.json").fields().forEachRemaining(e -> constants.put(e.getKey(), e.getValue().asInt()));
-                report.put("runtimeCapabilities", List.of("AsnAper-v1"));
-                report.put("runtimeValidation", target == null ? "Bundled prerequisite required; no target supplied" : "Target source capability and public API inspected with javac");
+                report.put("runtimeCapabilities", List.of("inline-aper"));
+                report.put("runtimeValidation", target == null ? "Private APER helpers emitted in IE classes; no target supplied" : "Private APER helpers emitted in IE classes; target public API inspected with javac");
                 report.put("extensionPolicy", options.extensions()); report.put("dependencyPolicy", options.dependencies());
                 List<Map<String, Object>> selections = new ArrayList<>(); report.put("selectors", selections);
                 LinkedHashMap<String, String> files = new LinkedHashMap<>();
@@ -98,6 +96,9 @@ public final class S1apGeneratorMain {
                             GenType root = normalizer.root(d.asnTypeName(), d.javaName(), d.type(), d.id());
                             selected.put("cycles", normalizer.cycles());
                             String constant = constant(d, overrides, constants); selected.put("protocolIeConstant", constant);
+                            if (constant == null && d.valueIe()) diagnostics.add(diagnostic("BUILDER_CONSTANT_UNAVAILABLE", "WARNING",
+                                    "ID " + d.id() + ": decoder uses numeric ID; MessageBuilder snippet omitted because the target ProtocolIeId has no constant",
+                                    selector, null));
                             List<String> refs = docs == null ? List.of() : docs.references(d.id(), d.asnTypeName(), overrides);
                             if (!options.docs().equals("off") && refs.isEmpty()) {
                                 if (options.docs().equals("required")) throw new GenerationException("DOC_MAPPING_MISSING", 8, "No docs mapping for ID " + d.id());
@@ -230,6 +231,7 @@ public final class S1apGeneratorMain {
             return configured;
         }
         List<String> matches = constants.entrySet().stream().filter(e -> e.getValue() == d.id()).map(Map.Entry::getKey).toList();
+        if (matches.isEmpty()) return null;
         if (matches.size() != 1) throw new GenerationException("PROTOCOL_IE_CONSTANT_MISSING", 6, "Need unique ProtocolIeId constant for ID " + d.id());
         return matches.get(0);
     }

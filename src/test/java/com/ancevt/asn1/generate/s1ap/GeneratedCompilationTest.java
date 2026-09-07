@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GeneratedCompilationTest {
     @TempDir static Path temp;
-    static final Path TARGET = Path.of(System.getProperty("naseps.sourceRoot", Files.isDirectory(Path.of("../naseps/src/main/java"))
-            ? "../naseps/src/main/java" : "runtime/naseps-fixture/src/main/java")).toAbsolutePath().normalize();
+    static final Path TARGET = Path.of(System.getProperty("naseps.sourceRoot",
+            "runtime/naseps-fixture/src/main/java")).toAbsolutePath().normalize();
     static Path output;
     static URLClassLoader loader;
     static final String PKG = "tel.core.s1ap.spec.ie.";
@@ -30,8 +30,14 @@ class GeneratedCompilationTest {
         output = temp.resolve("generated");
         assertEquals(0, GeneratorTest.cli(output, "--ie-list", selectors.toString(), "--dependency-policy", "closure",
                 "--overrides", "config/s1ap-overrides.json", "--extension-policy", "known-additions", "--target-source-root", TARGET.toString()));
+        assertFalse(Files.readString(output.resolve("reports/generation-report.json")).contains("AsnAper"));
         List<Path> sources;
         try (var paths = Files.walk(output.resolve("sources"))) { sources = new ArrayList<>(paths.filter(p -> p.toString().endsWith(".java")).toList()); }
+        for (Path source : sources) {
+            String code = Files.readString(source);
+            assertFalse(code.contains("AsnAper"), source.toString());
+            assertFalse(code.contains("AsnPrintableString.encodeAper") || code.contains("AsnPrintableString.decodeAper"), source.toString());
+        }
         try (var paths = Files.list(TARGET.resolve("tel/core/s1ap/core/asn"))) { sources.addAll(paths.filter(p -> p.toString().endsWith(".java")).toList()); }
         for (String p : List.of("core/model/InformationElement.java", "core/model/Criticality.java", "core/model/InformationElementDecoderRegistry.java",
                 "core/error/S1apException.java", "spec/ProtocolIeId.java")) sources.add(TARGET.resolve("tel/core/s1ap/" + p));
@@ -58,6 +64,23 @@ class GeneratedCompilationTest {
         loader = new URLClassLoader(new URL[] {classes.toUri().toURL()}, ClassLoader.getPlatformClassLoader());
     }
     @AfterAll static void close() throws Exception { if (loader != null) loader.close(); }
+    @Test void legacyFixtureNeedsNoPatchAndMissingConstantsUseNumericRegistration() throws Exception {
+        Path fixture = Path.of("runtime/naseps-fixture");
+        assertFalse(Files.exists(fixture.resolve("src/main/java/tel/core/s1ap/core/asn/AsnAper.java")));
+        assertFalse(Files.readString(fixture.resolve("src/main/java/tel/core/s1ap/core/asn/AsnPrintableString.java")).contains("encodeAper"));
+        var metadata = Json.read(fixture.resolve("metadata.json")).path("files").fields();
+        while (metadata.hasNext()) {
+            var file = metadata.next();
+            assertEquals(file.getValue().asText(), Json.hash(Files.readAllBytes(fixture.resolve(file.getKey()))), file.getKey());
+        }
+        Path directory = temp.resolve("missing-constant");
+        assertEquals(0, GeneratorTest.cli(directory, "--ie", "58", "--dependency-policy", "closure",
+                "--target-source-root", fixture.resolve("src/main/java").toString()));
+        assertTrue(Files.readString(directory.resolve("snippets/decoder-registrations.txt")).contains("register(58, CriticalityDiagnostics::new)"));
+        assertFalse(Files.readString(directory.resolve("snippets/InformationElements.methods.txt")).isBlank());
+        assertTrue(Files.readString(directory.resolve("snippets/MessageBuilder.methods.txt")).isBlank());
+        assertTrue(Json.read(directory.resolve("reports/generation-report.json")).path("diagnostics").toString().contains("BUILDER_CONSTANT_UNAVAILABLE"));
+    }
     @Test void externalVectorsDecodeAndEncodeByteExactly() throws Exception {
         JsonNode data = Json.read(Path.of("src/test/resources/generator/aper-vectors.json"));
         assertEquals(Json.hash(Files.readAllBytes(Path.of("s1ap.asn"))), data.path("asnSha256").asText());

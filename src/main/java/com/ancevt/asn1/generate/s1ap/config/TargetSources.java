@@ -15,7 +15,6 @@ public final class TargetSources {
                       boolean decoder, boolean encoder, boolean informationElement, String hash) { }
     private final Map<String, Api> classes = new TreeMap<>();
     private final Map<String, Integer> constants = new TreeMap<>();
-    private final boolean runtime;
     public TargetSources(Path sourceRoot) throws IOException {
         if (ToolProvider.getSystemJavaCompiler() == null) throw new GenerationException("MISSING_RUNTIME_CAPABILITY", 6, "Run with JDK, not JRE");
         List<Path> files;
@@ -50,11 +49,8 @@ public final class TargetSources {
                 }
             }
         }
-        Api helper = classes.get("tel.core.s1ap.core.asn.AsnAper");
-        runtime = helper != null && Files.readString(helper.path()).contains("\"AsnAper-v1\"");
     }
     private static String simple(String type) { return type.substring(type.lastIndexOf('.') + 1); }
     public Api find(String pkg, String name) { return classes.get(pkg + "." + name); }
     public Map<String, Integer> constants() { return Collections.unmodifiableMap(constants); }
-    public boolean runtime() { return runtime; }
 }

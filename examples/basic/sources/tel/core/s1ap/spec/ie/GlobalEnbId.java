@@ -3,7 +3,6 @@
 package tel.core.s1ap.spec.ie;
 
 import java.util.Objects;
-import tel.core.s1ap.core.asn.AsnAper;
 import tel.core.s1ap.core.asn.BitInput;
 import tel.core.s1ap.core.asn.BitOutput;
 import tel.core.s1ap.core.error.S1apException;
@@ -11,7 +10,7 @@ import tel.core.s1ap.core.model.InformationElement;
 
 /**
  * Global-ENB-ID information element.
- * <p>See <a href="https://www.etsi.org/deliver/etsi_ts/136400_136499/136413/15.03.00_60/ts_136413v150300p.pdf">
+ * <p>See <a href="https://www.etsi.org/deliver/etsi_ts/136400_136499/136413/15.11.00_60/ts_136413v151100p.pdf">
  * TS 136 413 V15.3.0: 9.2.1.37 Global eNB ID</a>.
  */
 public final class GlobalEnbId implements InformationElement {
@@ -32,13 +31,13 @@ public final class GlobalEnbId implements InformationElement {
             this.enbId = new EnbId(in);
             this.ieExtensions = hasIeExtensions ? new GlobalEnbIdIeExtensions(in) : null;
         } catch (RuntimeException e) {
-            throw AsnAper.protocol(e);
+            throw aperProtocol(e);
         }
     }
 
     /**
      * Creates Global-ENB-ID.
-     * <p>See <a href="https://www.etsi.org/deliver/etsi_ts/136400_136499/136413/15.03.00_60/ts_136413v150300p.pdf">
+     * <p>See <a href="https://www.etsi.org/deliver/etsi_ts/136400_136499/136413/15.11.00_60/ts_136413v151100p.pdf">
      * TS 136 413 V15.3.0: 9.2.1.37 Global eNB ID</a>.
      */
     public GlobalEnbId(PlmnIdentity plmnIdentity, EnbId enbId, GlobalEnbIdIeExtensions ieExtensions) {
@@ -65,6 +64,11 @@ public final class GlobalEnbId implements InformationElement {
 
     @Override
     public String toString() {
-        return "GlobalEnbId{" + '}';
+        return getClass().getSimpleName() + "{" + '}';
     }
+
+    private static S1apException aperProtocol(RuntimeException e) {
+        return e instanceof S1apException s ? s : new S1apException("Invalid APER value: " + e.getMessage());
+    }
+
 }

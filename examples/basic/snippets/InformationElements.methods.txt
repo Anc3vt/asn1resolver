@@ -1,6 +1,6 @@
 /**
  * Creates ENBname.
- * <p>See <a href="https://www.etsi.org/deliver/etsi_ts/136400_136499/136413/15.03.00_60/ts_136413v150300p.pdf">
+ * <p>See <a href="https://www.etsi.org/deliver/etsi_ts/136400_136499/136413/15.11.00_60/ts_136413v151100p.pdf">
  * TS 136 413 V15.3.0: 9.1.8.4 S1 SETUP REQUEST</a>.
  */
 public static EnbName enbName(String value) {
@@ -9,7 +9,7 @@ public static EnbName enbName(String value) {
 
 /**
  * Creates Global-ENB-ID.
- * <p>See <a href="https://www.etsi.org/deliver/etsi_ts/136400_136499/136413/15.03.00_60/ts_136413v150300p.pdf">
+ * <p>See <a href="https://www.etsi.org/deliver/etsi_ts/136400_136499/136413/15.11.00_60/ts_136413v151100p.pdf">
  * TS 136 413 V15.3.0: 9.2.1.37 Global eNB ID</a>.
  */
 public static GlobalEnbId globalEnbId(PlmnIdentity plmnIdentity, EnbId enbId, GlobalEnbIdIeExtensions ieExtensions) {
@@ -18,7 +18,7 @@ public static GlobalEnbId globalEnbId(PlmnIdentity plmnIdentity, EnbId enbId, Gl
 
 /**
  * Creates E-RABSetupListCtxtSURes.
- * <p>See <a href="https://www.etsi.org/deliver/etsi_ts/136400_136499/136413/15.03.00_60/ts_136413v150300p.pdf">
+ * <p>See <a href="https://www.etsi.org/deliver/etsi_ts/136400_136499/136413/15.11.00_60/ts_136413v151100p.pdf">
  * TS 136 413 V15.3.0: 9.1.4.3 INITIAL CONTEXT SETUP RESPONSE</a>.
  */
 public static ERabSetupList erabSetupList(java.util.List<ERabSetupItem> values) {
@@ -27,7 +27,7 @@ public static ERabSetupList erabSetupList(java.util.List<ERabSetupItem> values) 
 
 /**
  * Creates E-RABSetupListCtxtSURes.
- * <p>See <a href="https://www.etsi.org/deliver/etsi_ts/136400_136499/136413/15.03.00_60/ts_136413v150300p.pdf">
+ * <p>See <a href="https://www.etsi.org/deliver/etsi_ts/136400_136499/136413/15.11.00_60/ts_136413v151100p.pdf">
  * TS 136 413 V15.3.0: 9.1.4.3 INITIAL CONTEXT SETUP RESPONSE</a>.
  */
 public static ERabSetupList erabSetupList(ERabSetupItem... values) {

@@ -25,9 +25,14 @@ java -jar target/s1ap-ie-generator.jar --help
 Результат сборки: `target/s1ap-ie-generator.jar`, зависимости включены.
 Обычный профиль resolver и его `-Passembly` сохранены.
 
-Runtime prerequisite уже добавлен в соседний рабочий `naseps`. Для другого
-checkout см. [runtime/README.md](runtime/README.md) и
-[naseps-aper-v1.patch](runtime/naseps-aper-v1.patch).
+Существующие файлы целевого проекта и библиотеку `asn` менять не нужно.
+Генерируемые IE используют исходный API `BitInput`, `BitOutput`,
+`AsnBitString`, `AsnOctetString` и `AsnOpenType`. Недостающие операции APER
+включаются в каждый IE как `private static` методы, только по необходимости.
+`AsnAper` и новые методы `AsnPrintableString` не требуются.
+Для protocol containers тип поля объявляется внутри соответствующего IE
+как публичный record `AperField`; отдельного runtime-класса нет.
+Подробности проверки совместимости: [runtime/README.md](runtime/README.md).
 
 ## Быстрый рабочий сценарий
 
@@ -280,7 +285,6 @@ HandoverRestrictionList; для остальных IE его нужно допо
 
 ```powershell
 mvn clean test
-mvn -f C:/workspace/naseps/pom.xml test
 ```
 
 При другом расположении target:
@@ -289,7 +293,8 @@ mvn -f C:/workspace/naseps/pom.xml test
 mvn test "-Dnaseps.sourceRoot=C:/other/naseps/src/main/java"
 ```
 
-Без соседнего проекта используется проверенный runtime source fixture.
+По умолчанию тесты используют snapshot **исходного, неизменённого** API
+целевого проекта из `runtime/naseps-fixture`, без `AsnAper` и без патча.
 CI явно проверяет его: full-schema generation/dry-run, compilation всех 271
 root classes и их зависимостей, всех snippets, golden sources и внешних APER
 vectors входят в обычный `mvn test`. В текущем baseline closure составляет
@@ -342,9 +347,16 @@ Fail-closed ограничения за пределами проверенно�
 
 Практические исправления: `AMBIGUOUS_SELECTOR` → выбрать ID;
 `JAVA_NAME_COLLISION` → задать override; `DEPENDENCY_NOT_FOUND` → передать target
-или выбрать `missing/closure`; `MISSING_RUNTIME_CAPABILITY` → применить
-prerequisite patch; `DOC_VERSION_MISMATCH` → проверить ASN/version/hash;
-`PROTOCOL_IE_CONSTANT_MISSING` → добавить подтверждённую numeric constant в target.
+или выбрать `missing/closure`; `MISSING_RUNTIME_CAPABILITY` → запустить на JDK;
+`DOC_VERSION_MISMATCH` → проверить ASN/version/hash;
+`PROTOCOL_IE_CONSTANT_MISSING` → проверить явный override имени константы.
+
+Если константы ID нет в `ProtocolIeId`, класс IE и фабрика создаются,
+регистрация decoder использует числовой ID. Метод `MessageBuilder` для этого
+IE пропускается с предупреждением `BUILDER_CONSTANT_UNAVAILABLE`: его
+существующий `addField` принимает `ProtocolIeId`. Сам enum не меняется.
+Это относится к ID 58, 146, 241, 242, 244, 247, 248, 250 в исходном snapshot.
+Передавайте `--target-source-root` для проверки констант именно вашего проекта.
 
 `--report-format text|json|both` управляет журналами. Text report — полный
 pretty-printed report с заголовком. JSON schema:

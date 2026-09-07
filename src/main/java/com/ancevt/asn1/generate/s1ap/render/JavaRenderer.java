@@ -30,7 +30,7 @@ public final class JavaRenderer {
         code.line("public final class " + t.javaName() + " implements InformationElement {");
         if (t.bounds() != null) {
             String ranges = t.bounds().intervals().stream().map(i -> i.min() + ":" + i.max()).collect(Collectors.joining("|"));
-            code.line("    private static final AsnAper.Range RANGE = new AsnAper.Range(\"" + ranges + "\");");
+            code.line("    private static final AperRange RANGE = new AperRange(\"" + ranges + "\");");
         }
         switch (t.kind()) {
             case INTEGER, ENUMERATED, OCTET_STRING, BIT_STRING, PRINTABLE_STRING -> primitive(code, t, ctors, refs);
@@ -57,13 +57,16 @@ public final class JavaRenderer {
             case CHOICE -> " + choice";
             default -> "";
         };
-        code.line("        return \"" + t.javaName() + "{\"" + summary + " + '}';");
-        code.line("    }\n}");
+        code.line("        return getClass().getSimpleName() + \"{\"" + summary + " + '}';");
+        code.line("    }");
+        code.line(InlineAper.members(code.toString()));
+        code.line("}");
         String body = code.toString();
         TreeSet<String> imports = new TreeSet<>();
-        for (String name : List.of("java.math.BigInteger", "java.util.List", "java.util.Objects",
-                "tel.core.s1ap.core.asn.AsnAper", "tel.core.s1ap.core.asn.AsnBitString",
-                "tel.core.s1ap.core.asn.AsnPrintableString", "tel.core.s1ap.core.asn.BitInput", "tel.core.s1ap.core.asn.BitOutput",
+        for (String name : List.of("java.math.BigInteger", "java.nio.charset.StandardCharsets", "java.util.ArrayList",
+                "java.util.List", "java.util.Objects", "java.util.function.Function", "java.util.function.BiConsumer",
+                "tel.core.s1ap.core.asn.AsnOctetString", "tel.core.s1ap.core.asn.AsnOpenType", "tel.core.s1ap.core.asn.AsnBitString",
+                "tel.core.s1ap.core.asn.BitInput", "tel.core.s1ap.core.asn.BitOutput",
                 "tel.core.s1ap.core.error.S1apException", "tel.core.s1ap.core.model.InformationElement")) {
             String simple = name.substring(name.lastIndexOf('.') + 1);
             if (Pattern.compile("\\b" + simple + "\\b").matcher(body).find()) imports.add(name);
@@ -89,7 +92,7 @@ public final class JavaRenderer {
         decodeDoc(c, t, refs); c.line("    public " + t.javaName() + "(BitInput in) {"); c.line("        try {");
     }
     private void endDecode(Code c) {
-        c.line("        } catch (RuntimeException e) {"); c.line("            throw AsnAper.protocol(e);"); c.line("        }\n    }\n");
+        c.line("        } catch (RuntimeException e) {"); c.line("            throw aperProtocol(e);"); c.line("        }\n    }\n");
     }
     private void encodeStart(Code c) { c.line("\n    @Override\n    public void encode(BitOutput out) {"); }
     private static String cap(String name) { return Character.toUpperCase(name.charAt(0)) + name.substring(1); }
@@ -105,29 +108,29 @@ public final class JavaRenderer {
         c.line("    private final " + type + " " + field + ";\n");
         beginDecode(c, t, refs);
         String decode = switch (t.kind()) {
-            case INTEGER -> "AsnAper.integer(in, " + args(t) + ")" + (type.equals("int") ? ".intValueExact()" : type.equals("long") ? ".longValueExact()" : "");
-            case ENUMERATED -> "Value.fromIndex(AsnAper.index(in, " + rootCount(t) + ", " + t.extensible() + ", " + known + "))";
-            case OCTET_STRING -> "AsnAper.octets(in, " + args(t) + ")";
-            case BIT_STRING -> "AsnAper.bits(in, " + args(t) + ")" + (scalarBit ? type.equals("int") ? ".toInt()" : type.equals("long") ? ".toLong()" : ".getBytes()" : "");
-            case PRINTABLE_STRING -> "AsnPrintableString.decodeAper(in, " + args(t) + ")";
+            case INTEGER -> "aperInteger(in, " + args(t) + ")" + (type.equals("int") ? ".intValueExact()" : type.equals("long") ? ".longValueExact()" : "");
+            case ENUMERATED -> "Value.fromIndex(aperIndex(in, " + rootCount(t) + ", " + t.extensible() + ", " + known + "))";
+            case OCTET_STRING -> "aperOctets(in, " + args(t) + ")";
+            case BIT_STRING -> "aperBits(in, " + args(t) + ")" + (scalarBit ? type.equals("int") ? ".toInt()" : type.equals("long") ? ".toLong()" : ".getBytes()" : "");
+            case PRINTABLE_STRING -> "aperString(in, " + args(t) + ")";
             default -> throw new IllegalStateException();
         };
         c.line("            this." + field + " = " + decode + ";"); endDecode(c);
         valueDoc(c, t, refs);
         c.line("    public " + t.javaName() + "(" + type + " " + field + ") {");
         switch (t.kind()) {
-            case INTEGER -> c.line("        AsnAper.validate(" + big(t, field) + ", " + args(t) + ");");
+            case INTEGER -> c.line("        aperValidate(" + big(t, field) + ", " + args(t) + ");");
             case ENUMERATED -> {
                 c.line("        Objects.requireNonNull(value, \"value\");");
                 if (!known) c.line("        if (value.extensionAddition) throw new IllegalArgumentException(\"Extension enum is disabled\");");
             }
             default -> {
                 if (!type.equals("int") && !type.equals("long")) c.line("        Objects.requireNonNull(" + field + ", \"" + field + "\");");
-                if (t.kind() == GenType.Kind.PRINTABLE_STRING) c.line("        AsnAper.printable(value);");
+                if (t.kind() == GenType.Kind.PRINTABLE_STRING) c.line("        aperPrintable(value);");
                 if (scalarBit) c.line("        " + bitValue(t) + ";");
                 else {
                     String size = octets ? "bytes.length" : t.kind() == GenType.Kind.BIT_STRING ? "value.getBitLength()" : "value.length()";
-                    c.line("        AsnAper.size(" + size + ", " + args(t) + ");");
+                    c.line("        aperSize(" + size + ", " + args(t) + ");");
                 }
             }
         }
@@ -137,18 +140,18 @@ public final class JavaRenderer {
         if (t.kind() == GenType.Kind.ENUMERATED) c.line("    public int getCode() { return value.index; }");
         encodeStart(c);
         String encode = switch (t.kind()) {
-            case INTEGER -> "AsnAper.integer(out, " + big(t, field) + ", " + args(t) + ");";
-            case ENUMERATED -> "AsnAper.index(out, value.index, value.extensionAddition, " + rootCount(t) + ", " + t.extensible() + ", " + known + ");";
-            case OCTET_STRING -> "AsnAper.octets(out, bytes, " + args(t) + ");";
-            case BIT_STRING -> "AsnAper.bits(out, " + (scalarBit ? bitValue(t) : "value") + ", " + args(t) + ");";
-            case PRINTABLE_STRING -> "AsnPrintableString.encodeAper(out, value, " + args(t) + ");";
+            case INTEGER -> "aperInteger(out, " + big(t, field) + ", " + args(t) + ");";
+            case ENUMERATED -> "aperIndex(out, value.index, value.extensionAddition, " + rootCount(t) + ", " + t.extensible() + ", " + known + ");";
+            case OCTET_STRING -> "aperOctets(out, bytes, " + args(t) + ");";
+            case BIT_STRING -> "aperBits(out, " + (scalarBit ? bitValue(t) : "value") + ", " + args(t) + ");";
+            case PRINTABLE_STRING -> "aperString(out, value, " + args(t) + ");";
             default -> throw new IllegalStateException();
         };
         c.line("        " + encode); c.line("    }");
     }
     private String bitValue(GenType t) {
         return t.representation().equals("byte[]") ? "AsnBitString.Value.fromBytes(value, " + t.bounds().max() + ")"
-                : "AsnAper.bitmap(" + (t.representation().equals("int") ? "Integer.toUnsignedLong(value)" : "value") + ", " + t.bounds().max() + ")";
+                : "aperBitmap(" + (t.representation().equals("int") ? "Integer.toUnsignedLong(value)" : "value") + ", " + t.bounds().max() + ")";
     }
     private long rootCount(GenType t) { return t.items().stream().filter(i -> !i.extension()).count(); }
     private void enumeration(Code c, GenType t) {
@@ -187,11 +190,11 @@ public final class JavaRenderer {
             c.line("            this." + f.javaName() + " = " + (f.optional() ? "has" + cap(f.javaName()) + " ? " : "")
                     + "new " + f.javaType() + "(in)" + (f.emptyAbsentElementType() != null ? ".getValues()" : "") + (f.optional() ? " : " + absent : "") + ";");
         }
-        if (known && t.extensible()) c.line("            BitInput[] additions = hasExtensions ? AsnAper.extensions(in, " + ext.size() + ") : new BitInput[" + ext.size() + "];");
+        if (known && t.extensible()) c.line("            BitInput[] additions = hasExtensions ? aperExtensions(in, " + ext.size() + ") : new BitInput[" + ext.size() + "];");
         for (int i = 0; i < ext.size(); i++) {
             GenType.Field f = ext.get(i);
             c.line("            this." + f.javaName() + " = " + (known ? "additions[" + i + "] == null ? null : new " + f.javaType() + "(additions[" + i + "])" : "null") + ";");
-            if (known) c.line("            if (additions[" + i + "] != null) AsnAper.finishOpen(additions[" + i + "]);");
+            if (known) c.line("            if (additions[" + i + "] != null) aperFinishOpen(additions[" + i + "]);");
         }
         endDecode(c);
         List<Parameter> params = t.fields().stream().map(f -> new Parameter(f.publicType(), f.javaName())).toList();
@@ -216,7 +219,7 @@ public final class JavaRenderer {
         for (GenType.Field f : root) if (f.optional()) c.line("        out.writeBit(" + present(f) + ");");
         for (GenType.Field f : root) c.line("        " + (f.optional() ? "if (" + present(f) + ") " : "")
                 + (f.emptyAbsentElementType() != null ? "new " + f.javaType() + "(" + f.javaName() + ")" : f.javaName()) + ".encode(out);");
-        if (known && !ext.isEmpty()) c.line("        if (hasExtensions) AsnAper.extensions(out, " + ext.stream().map(GenType.Field::javaName).collect(Collectors.joining(", ")) + ");");
+        if (known && !ext.isEmpty()) c.line("        if (hasExtensions) aperExtensions(out, " + ext.stream().map(GenType.Field::javaName).collect(Collectors.joining(", ")) + ");");
         c.line("    }");
     }
     private String present(GenType.Field f) {
@@ -229,14 +232,14 @@ public final class JavaRenderer {
         c.line("    private final Choice choice;"); fields(c, t);
         int roots = (int) t.fields().stream().filter(f -> !f.extension()).count();
         beginDecode(c, t, refs);
-        c.line("            int index = AsnAper.index(in, " + roots + ", " + t.extensible() + ", " + known + ");");
-        c.line("            BitInput content = index < 0 ? AsnAper.open(in) : in;");
+        c.line("            int index = aperIndex(in, " + roots + ", " + t.extensible() + ", " + known + ");");
+        c.line("            BitInput content = index < 0 ? aperOpen(in) : in;");
         c.line("            this.choice = switch (index) {");
         int ri = 0, ei = 0;
         for (GenType.Field f : t.fields()) c.line("                case " + (f.extension() ? -++ei : ri++) + " -> Choice." + f.javaName().toUpperCase(Locale.ROOT) + ";");
         c.line("                default -> throw new S1apException(\"Unknown CHOICE index\");\n            };");
         for (GenType.Field f : t.fields()) c.line("            this." + f.javaName() + " = choice == Choice." + f.javaName().toUpperCase(Locale.ROOT) + " ? new " + f.javaType() + "(content) : null;");
-        c.line("            if (index < 0) AsnAper.finishOpen(content);"); endDecode(c);
+        c.line("            if (index < 0) aperFinishOpen(content);"); endDecode(c);
         List<Parameter> params = t.fields().stream().map(f -> new Parameter(f.javaType(), f.javaName())).toList();
         c.line("    private " + t.javaName() + "(Choice choice, " + declarations(params) + ") {\n        this.choice = choice;");
         for (GenType.Field f : t.fields()) c.line("        this." + f.javaName() + " = " + f.javaName() + ";");
@@ -257,8 +260,8 @@ public final class JavaRenderer {
         c.line("        switch (choice) {"); ri = 0; ei = 0;
         for (GenType.Field f : t.fields()) {
             c.line("            case " + f.javaName().toUpperCase(Locale.ROOT) + " -> {");
-            c.line("                AsnAper.index(out, " + (f.extension() ? ei++ : ri++) + ", " + f.extension() + ", " + roots + ", " + t.extensible() + ", " + known + ");");
-            c.line("                " + (f.extension() ? "AsnAper.open(out, " + f.javaName() + ");" : f.javaName() + ".encode(out);") + "\n            }");
+            c.line("                aperIndex(out, " + (f.extension() ? ei++ : ri++) + ", " + f.extension() + ", " + roots + ", " + t.extensible() + ", " + known + ");");
+            c.line("                " + (f.extension() ? "aperOpen(out, " + f.javaName() + ");" : f.javaName() + ".encode(out);") + "\n            }");
         }
         c.line("        }\n    }");
     }
@@ -267,14 +270,14 @@ public final class JavaRenderer {
         c.line("    private final List<" + element + "> values;\n");
         if (field) {
             GenType.OpenAlternative a = t.alternatives().get(0);
-            c.line("    private static " + element + " readItem(BitInput in) {\n        return (" + element + ") AsnAper.field(in, new int[] {" + a.id() + "}, new int[] {" + criticality(a.criticality()) + "},");
+            c.line("    private static " + element + " readItem(BitInput in) {\n        return (" + element + ") aperField(in, new int[] {" + a.id() + "}, new int[] {" + criticality(a.criticality()) + "},");
             c.line("                List.of(" + element + "::new)).value();\n    }");
         }
         beginDecode(c, t, refs);
-        c.line("            this.values = AsnAper.list(in, " + args(t) + ", " + (field ? t.javaName() + "::readItem" : element + "::new") + ");"); endDecode(c);
+        c.line("            this.values = aperList(in, " + args(t) + ", " + (field ? t.javaName() + "::readItem" : element + "::new") + ");"); endDecode(c);
         valueDoc(c, t, refs);
         c.line("    public " + t.javaName() + "(List<" + element + "> values) {\n        this.values = List.copyOf(values);");
-        c.line("        AsnAper.size(values.size(), " + args(t) + ");\n    }");
+        c.line("        aperSize(values.size(), " + args(t) + ");\n    }");
         valueDoc(c, t, refs);
         c.line("    public " + t.javaName() + "(" + element + "... values) { this(List.of(values)); }");
         c.line("    public List<" + element + "> getValues() { return values; }");
@@ -283,33 +286,33 @@ public final class JavaRenderer {
         encodeStart(c);
         String writer = "(target, value) -> value.encode(target)";
         if (field) { GenType.OpenAlternative a = t.alternatives().get(0);
-            writer = "(target, value) -> AsnAper.field(target, new AsnAper.Field(" + a.id() + ", " + criticality(a.criticality()) + ", value))"; }
-        c.line("        AsnAper.list(out, values, " + args(t) + ",\n                " + writer + ");\n    }");
+            writer = "(target, value) -> aperField(target, new AperField(" + a.id() + ", " + criticality(a.criticality()) + ", value))"; }
+        c.line("        aperList(out, values, " + args(t) + ",\n                " + writer + ");\n    }");
     }
     private void container(Code c, GenType t, List<Constructor> ctors, List<String> refs) {
-        boolean single = t.representation().equals("single"); String type = single ? "AsnAper.Field" : "List<AsnAper.Field>";
+        boolean single = t.representation().equals("single"); String type = single ? "AperField" : "List<AperField>";
         c.line("    private final " + type + " values;");
-        c.line("    private static AsnAper.Field readField(BitInput in) {\n        return AsnAper.field(in,");
+        c.line("    private static AperField readField(BitInput in) {\n        return aperField(in,");
         c.line("                new int[] {" + t.alternatives().stream().map(a -> Integer.toString(a.id())).collect(Collectors.joining(", ")) + "},");
         c.line("                new int[] {" + t.alternatives().stream().map(a -> Integer.toString(criticality(a.criticality()))).collect(Collectors.joining(", ")) + "},");
         c.line("                List.of(" + t.alternatives().stream().map(a -> a.javaType() + "::new").collect(Collectors.joining(", ")) + "));\n    }");
-        c.line("    private static void validateField(AsnAper.Field field) {");
+        c.line("    private static void validateField(AperField field) {");
         c.line("        Objects.requireNonNull(field, \"field\");");
         for (GenType.OpenAlternative a : t.alternatives()) c.line("        if (field.id() == " + a.id() + " && field.criticality() == " + criticality(a.criticality())
                 + " && field.value() instanceof " + a.javaType() + ") return;");
         c.line("        throw new IllegalArgumentException(\"Value does not belong to the container object set\");\n    }");
         beginDecode(c, t, refs);
-        c.line("            this.values = " + (single ? "readField(in)" : "AsnAper.list(in, " + args(t) + ", " + t.javaName() + "::readField)") + ";"); endDecode(c);
+        c.line("            this.values = " + (single ? "readField(in)" : "aperList(in, " + args(t) + ", " + t.javaName() + "::readField)") + ";"); endDecode(c);
         valueDoc(c, t, refs);
         c.line("    public " + t.javaName() + "(" + type + " values) {");
         if (single) c.line("        validateField(values);\n        this.values = values;");
-        else c.line("        this.values = List.copyOf(values);\n        AsnAper.size(values.size(), " + args(t) + ");\n        this.values.forEach(" + t.javaName() + "::validateField);");
+        else c.line("        this.values = List.copyOf(values);\n        aperSize(values.size(), " + args(t) + ");\n        this.values.forEach(" + t.javaName() + "::validateField);");
         c.line("    }");
         c.line("    public " + type + " getValues() { return values; }");
-        for (GenType.OpenAlternative a : t.alternatives()) c.line("    public static AsnAper.Field field" + a.id() + "(" + a.javaType() + " value) {\n        return new AsnAper.Field(" + a.id() + ", " + criticality(a.criticality()) + ", value);\n    }");
+        for (GenType.OpenAlternative a : t.alternatives()) c.line("    public static AperField field" + a.id() + "(" + a.javaType() + " value) {\n        return new AperField(" + a.id() + ", " + criticality(a.criticality()) + ", value);\n    }");
         ctors.add(new Constructor(List.of(new Parameter(type, "values")), "new " + t.javaName() + "(values)", ""));
         encodeStart(c);
-        c.line("        " + (single ? "AsnAper.field(out, values);" : "AsnAper.list(out, values, " + args(t) + ", AsnAper::field);") + "\n    }");
+        c.line("        " + (single ? "aperField(out, values);" : "aperList(out, values, " + args(t) + ", " + t.javaName() + "::aperField);") + "\n    }");
     }
     public static int criticality(String value) {
         return switch (value) { case "reject" -> 0; case "ignore" -> 1; case "notify" -> 2; default -> throw new IllegalArgumentException("Unknown criticality: " + value); };

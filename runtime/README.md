@@ -1,39 +1,35 @@
-# APER prerequisite для naseps
+# Совместимость с исходной библиотекой asn
 
-Изменения уже внесены в соседний рабочий `C:\workspace\naseps`:
+Генератор больше не требует `AsnAper`, изменений `AsnPrintableString`
+или установки патча в целевой проект. Старый prerequisite patch удалён.
 
-- `AsnAper`: общие алгоритмы aligned PER, capability `AsnAper-v1`;
-- `AsnPrintableString.encodeAper/decodeAper`: новые явно настраиваемые методы;
-- восемь отсутствовавших констант `ProtocolIeId`;
-- `AsnAperTest`: дополнительные codec tests.
+Недостающие алгоритмы APER находятся в шаблоне генератора
+`src/main/resources/s1ap-generator/inline-aper.java.txt`. Генератор разбирает
+его через javac и включает только используемые члены и их зависимости в
+каждый новый IE-класс. Вспомогательные методы — `private static`.
+Существующие `AsnOctetString` и `AsnOpenType` используются напрямую;
+`BitInput`, `BitOutput`, `AsnBitString.Value`, `InformationElement` и
+`S1apException` сохраняют исходный API.
 
-Старые codec entry points сохраняют своё поведение. Изменённый пользователем
-`Validator.java` не входит в patch.
+`naseps-fixture` содержит 15 неизменённых исходных файлов из git revision,
+указанного в `metadata.json`, включая исходные `AsnPrintableString` и
+`ProtocolIeId`. `AsnAper` в fixture отсутствует. SHA-256 каждого файла
+проверяется тестом. Соседний рабочий проект не используется по умолчанию.
 
-Для другого checkout сначала проверьте patch:
-
-```powershell
-git -C C:\workspace\naseps apply --check C:\workspace\asn1resolver2\runtime\naseps-aper-v1.patch
-git -C C:\workspace\naseps apply C:\workspace\asn1resolver2\runtime\naseps-aper-v1.patch
-mvn -f C:\workspace\naseps\pom.xml test
+```sh
+mvn -Pgenerator clean verify
 ```
 
-Если изменения уже применены, повторное применение не нужно. Проверка:
+Компиляционные тесты создают все 678 IE-классов и компилируют их и snippets
+с этим API. Классы проверяются внешними APER-векторами. Если в исходном enum
+нет ID, decoder регистрируется по числу; builder snippet пропускается с
+диагностикой, поскольку существующий addField принимает только ProtocolIeId.
 
-```powershell
-git -C C:\workspace\naseps apply --reverse --check C:\workspace\asn1resolver2\runtime\naseps-aper-v1.patch
-```
+Обновление fixture из **указанного git revision**, без чтения изменённых
+рабочих файлов и без изменения целевого проекта:
 
-`naseps-fixture` содержит точную копию необходимых Java sources текущего target
-с этим patch. Базовый commit и hashes каждого файла указаны в
-`naseps-fixture/metadata.json`. Fixture нужен для переносимых CI compilation
-tests; при наличии соседнего `naseps` локальные тесты используют его актуальные
-sources. Это не замена полному target-проекту.
-
-Обновление snapshot после отдельной проверки изменений runtime:
-
-```powershell
-python tools/snapshot_runtime.py C:\workspace\naseps
+```sh
+python tools/snapshot_runtime.py /path/to/target <git-revision>
 ```
 
 33 checked-in S1AP vectors получены через pycrate 0.8.1, скомпилировавший полный
@@ -48,9 +44,9 @@ python tools/snapshot_runtime.py C:\workspace\naseps
 - Для PrintableString с `SIZE(0..1)` наш результат `d060` совпадает с asn1tools
   и X.691 30.5.7; pycrate дополнительно выравнивает поле.
 - Для пустых variable BIT/OCTET STRING обе библиотеки добавляют alignment.
-  Runtime следует буквальному X.691 11.9.3.3, note 2: поле нулевой длины не
-  добавляет alignment. Эти три corner cases отдельно отражены в `AsnAperTest`;
-  они не выдаются за совпавшие внешние S1AP vectors.
+  Сгенерированный код следует буквальному X.691 11.9.3.3, note 2: поле нулевой длины не
+  добавляет alignment. Эти три corner cases исследованы отдельными
+  искусственными fixtures; они не выдаются за совпавшие внешние S1AP vectors.
 
 Нормативный источник: [ITU-T X.691 (02/2021)](https://www.itu.int/rec/T-REC-X.691-202102-I/en).
 Исходники независимых кодеков: [pycrate](https://github.com/P1sec/pycrate),

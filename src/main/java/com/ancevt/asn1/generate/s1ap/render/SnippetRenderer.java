@@ -27,7 +27,10 @@ public final class SnippetRenderer {
                               Documentation docs, List<String> refs) {
         JsonNode config = overrides.merged(d.asnTypeName(), d.id()); Set<String> suppress = new HashSet<>();
         config.path("suppressSnippets").forEach(s -> suppress.add(s.asText()));
-        if (d.valueIe() && !suppress.contains("decoder")) decoder.append("register(ProtocolIeId.").append(constant).append(", ").append(d.javaName()).append("::new);\n");
+        if (constant == null) suppress.add("builder");
+        if (d.valueIe() && !suppress.contains("decoder")) decoder.append("register(")
+                .append(constant == null ? Integer.toString(d.id()) : "ProtocolIeId." + constant)
+                .append(", ").append(d.javaName()).append("::new);\n");
         for (JavaRenderer.Constructor c : constructors) {
             List<JavaRenderer.Parameter> params = c.parameters().stream().map(p -> new JavaRenderer.Parameter(
                     qualified(p.type(), d.javaName()), p.name())).toList();
@@ -63,7 +66,7 @@ public final class SnippetRenderer {
         return type.equals("Value") ? root + ".Value" : type.replaceAll("(?<![\\w.])List(?=\\s*<)", "java.util.List")
                 .replaceAll("(?<![\\w.])BigInteger\\b", "java.math.BigInteger")
                 .replaceAll("(?<![\\w.])AsnBitString\\.", "tel.core.s1ap.core.asn.AsnBitString.")
-                .replaceAll("(?<![\\w.])AsnAper\\.", "tel.core.s1ap.core.asn.AsnAper.");
+                .replaceAll("(?<![\\w.])AperField\\b", root + ".AperField");
     }
     public Map<String, String> files() {
         Map<String, String> files = new LinkedHashMap<>();
