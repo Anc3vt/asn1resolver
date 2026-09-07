@@ -34,6 +34,6 @@ public final class S1Message implements InformationElement {
 
     @Override
     public String toString() {
-        return "S1Message{" + "bytes=" + bytes.length + '}';
+        return getClass().getSimpleName() + "{" + "bytes=" + bytes.length + '}';
     }
 }

@@ -66,6 +66,6 @@ public final class ERabUsageReportItem implements InformationElement {
 
     @Override
     public String toString() {
-        return "ERabUsageReportItem{" + '}';
+        return getClass().getSimpleName() + "{" + '}';
     }
 }

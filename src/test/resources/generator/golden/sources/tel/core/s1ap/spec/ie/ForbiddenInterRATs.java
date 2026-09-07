@@ -72,6 +72,6 @@ public final class ForbiddenInterRATs implements InformationElement {
 
     @Override
     public String toString() {
-        return "ForbiddenInterRATs{" + value + '}';
+        return getClass().getSimpleName() + "{" + value + '}';
     }
 }

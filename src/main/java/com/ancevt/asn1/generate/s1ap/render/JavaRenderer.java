@@ -57,7 +57,7 @@ public final class JavaRenderer {
             case CHOICE -> " + choice";
             default -> "";
         };
-        code.line("        return \"" + t.javaName() + "{\"" + summary + " + '}';");
+        code.line("        return getClass().getSimpleName() + \"{\"" + summary + " + '}';");
         code.line("    }\n}");
         String body = code.toString();
         TreeSet<String> imports = new TreeSet<>();

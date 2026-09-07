@@ -36,6 +36,6 @@ public final class EnbIdHomeEnbId implements InformationElement {
 
     @Override
     public String toString() {
-        return "EnbIdHomeEnbId{" + "bits=" + value.getBitLength() + '}';
+        return getClass().getSimpleName() + "{" + "bits=" + value.getBitLength() + '}';
     }
 }

@@ -60,6 +60,6 @@ public final class ERabSetupItem implements InformationElement {
 
     @Override
     public String toString() {
-        return "ERabSetupItem{" + '}';
+        return getClass().getSimpleName() + "{" + '}';
     }
 }

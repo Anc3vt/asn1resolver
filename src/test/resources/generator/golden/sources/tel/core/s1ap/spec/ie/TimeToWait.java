@@ -72,6 +72,6 @@ public final class TimeToWait implements InformationElement {
 
     @Override
     public String toString() {
-        return "TimeToWait{" + value + '}';
+        return getClass().getSimpleName() + "{" + value + '}';
     }
 }

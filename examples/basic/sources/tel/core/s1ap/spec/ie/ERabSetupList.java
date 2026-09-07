@@ -59,6 +59,6 @@ public final class ERabSetupList implements InformationElement {
 
     @Override
     public String toString() {
-        return "ERabSetupList{" + "size=" + values.size() + '}';
+        return getClass().getSimpleName() + "{" + "size=" + values.size() + '}';
     }
 }

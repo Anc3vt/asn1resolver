@@ -35,6 +35,6 @@ public final class PlmnIdentity implements InformationElement {
 
     @Override
     public String toString() {
-        return "PlmnIdentity{" + "bytes=" + bytes.length + '}';
+        return getClass().getSimpleName() + "{" + "bytes=" + bytes.length + '}';
     }
 }

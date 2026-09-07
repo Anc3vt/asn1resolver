@@ -44,6 +44,6 @@ public final class GlobalEnbIdIeExtensions implements InformationElement {
 
     @Override
     public String toString() {
-        return "GlobalEnbIdIeExtensions{" + '}';
+        return getClass().getSimpleName() + "{" + '}';
     }
 }

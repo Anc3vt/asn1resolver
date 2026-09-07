@@ -37,6 +37,6 @@ public final class EnbName implements InformationElement {
 
     @Override
     public String toString() {
-        return "EnbName{" + "length=" + value.length() + '}';
+        return getClass().getSimpleName() + "{" + "length=" + value.length() + '}';
     }
 }

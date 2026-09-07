@@ -36,6 +36,6 @@ public final class EnbIdMacroEnbId implements InformationElement {
 
     @Override
     public String toString() {
-        return "EnbIdMacroEnbId{" + "bits=" + value.getBitLength() + '}';
+        return getClass().getSimpleName() + "{" + "bits=" + value.getBitLength() + '}';
     }
 }

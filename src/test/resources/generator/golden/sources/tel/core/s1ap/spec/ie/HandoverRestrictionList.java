@@ -77,6 +77,6 @@ public final class HandoverRestrictionList implements InformationElement {
 
     @Override
     public String toString() {
-        return "HandoverRestrictionList{" + '}';
+        return getClass().getSimpleName() + "{" + '}';
     }
 }

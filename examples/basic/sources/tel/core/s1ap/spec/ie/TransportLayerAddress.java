@@ -36,6 +36,6 @@ public final class TransportLayerAddress implements InformationElement {
 
     @Override
     public String toString() {
-        return "TransportLayerAddress{" + "bits=" + value.getBitLength() + '}';
+        return getClass().getSimpleName() + "{" + "bits=" + value.getBitLength() + '}';
     }
 }

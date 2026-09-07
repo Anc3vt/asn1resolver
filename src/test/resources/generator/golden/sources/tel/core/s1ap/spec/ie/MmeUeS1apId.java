@@ -34,6 +34,6 @@ public final class MmeUeS1apId implements InformationElement {
 
     @Override
     public String toString() {
-        return "MmeUeS1apId{" + value + '}';
+        return getClass().getSimpleName() + "{" + value + '}';
     }
 }

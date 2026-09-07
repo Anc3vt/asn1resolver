@@ -36,6 +36,6 @@ public final class EnbIdLongMacroEnbId implements InformationElement {
 
     @Override
     public String toString() {
-        return "EnbIdLongMacroEnbId{" + "bits=" + value.getBitLength() + '}';
+        return getClass().getSimpleName() + "{" + "bits=" + value.getBitLength() + '}';
     }
 }

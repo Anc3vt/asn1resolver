@@ -34,6 +34,6 @@ public final class ERabId implements InformationElement {
 
     @Override
     public String toString() {
-        return "ERabId{" + value + '}';
+        return getClass().getSimpleName() + "{" + value + '}';
     }
 }

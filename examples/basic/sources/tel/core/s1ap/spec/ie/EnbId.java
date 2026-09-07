@@ -93,6 +93,6 @@ public final class EnbId implements InformationElement {
 
     @Override
     public String toString() {
-        return "EnbId{" + choice + '}';
+        return getClass().getSimpleName() + "{" + choice + '}';
     }
 }

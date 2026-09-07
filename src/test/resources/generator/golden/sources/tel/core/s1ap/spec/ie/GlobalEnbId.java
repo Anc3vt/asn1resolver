@@ -49,6 +49,6 @@ public final class GlobalEnbId implements InformationElement {
 
     @Override
     public String toString() {
-        return "GlobalEnbId{" + '}';
+        return getClass().getSimpleName() + "{" + '}';
     }
 }

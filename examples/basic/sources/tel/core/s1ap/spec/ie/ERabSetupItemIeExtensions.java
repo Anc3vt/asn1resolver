@@ -44,6 +44,6 @@ public final class ERabSetupItemIeExtensions implements InformationElement {
 
     @Override
     public String toString() {
-        return "ERabSetupItemIeExtensions{" + '}';
+        return getClass().getSimpleName() + "{" + '}';
     }
 }

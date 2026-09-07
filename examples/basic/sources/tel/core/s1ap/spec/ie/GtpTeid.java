@@ -35,6 +35,6 @@ public final class GtpTeid implements InformationElement {
 
     @Override
     public String toString() {
-        return "GtpTeid{" + "bytes=" + bytes.length + '}';
+        return getClass().getSimpleName() + "{" + "bytes=" + bytes.length + '}';
     }
 }
